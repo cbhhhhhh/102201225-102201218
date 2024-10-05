@@ -1,0 +1,14 @@
+<!--pages/first/first.wxml-->
+<text>pages/first/first.wxml</text>
+<view class="container">
+  <!-- 页面其他内容 -->
+
+  <!-- 底部滚动区域 -->
+  <scroll-view class="bottom-scroll" scroll-y="true">
+    <view class="scroll-item">块 1</view>
+    <view class="scroll-item">块 2</view>
+    <view class="scroll-item">块 3</view>
+    <view class="scroll-item">块 4</view>
+    <view class="scroll-item">块 5</view>
+  </scroll-view>
+</view>

@@ -1,0 +1,168 @@
+/* 设置整个页面居中 */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 将内容向上对齐 */
+  align-items: center;
+  height: 100vh;
+  padding-top: 130px; /* 增加顶部内边距，防止内容贴顶 */
+  background-color: #fff;
+}
+
+.top-bar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.home-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.app-logo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-logo {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+}
+
+.app-name {
+  font-size: 24px;
+  color: #b14b46;
+  margin-bottom: 40px;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-btn {
+  background-color: #1AAD19;
+  color: white;
+  width: 90%;      /* 默认使用百分比宽度 */
+  max-width: 500px; /* 最大宽度为 500px */
+  min-width: 280px; /* 最小宽度为 280px */
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding-left: 2px; /* 确保没有额外的 padding 影响布局 */
+}
+
+.wechat-icon {
+  width: 29px;
+  height: 29px;
+  padding-left: 10px;
+  margin-right: 1px; /* 调整图标与文字之间的间距 */
+}
+
+.terms {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #999;
+}
+.modal-mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.5;
+  overflow: hidden;
+  color: #fff;
+}
+
+.modal-dialog {
+  width: 72%;
+  position: absolute;
+  top: 30%;
+  left: 14%;
+  background: #fff;
+  border-radius: 12rpx;
+}
+
+.modal-content {
+  text-align: center;
+}
+
+.modal-content .show {
+  width: 450rpx;
+  height: 323rpx;
+  display: block;
+  margin: 0 auto;
+  margin-top: -118rpx;
+  z-index: 10000;
+}
+
+.iconWx {
+  width: 52rpx;
+  height: 41rpx;
+  padding-right: 20rpx;
+}
+
+.iconPhone {
+  width: 56rpx;
+  height: 56rpx;
+  padding-right: 15rpx;
+}
+
+.modal-content view:nth-of-type(2) {
+  font-size: 38rpx;
+  color: #333333;
+  line-height: 1;
+}
+
+.modal-content view:nth-of-type(3) {
+  font-size: 26rpx;
+  color: #9c9c9c;
+  margin: 18rpx 0 29rpx;
+  line-height: 1;
+}
+
+.modal-content button:nth-of-type(1) {
+  width: 80%;
+  height: 80rpx;
+  border-radius: 60rpx;
+  margin: 0 auto 80rpx;
+  font-size: 30rpx;
+  color: #fff;
+  background: #31cc32;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.modal-content button:nth-of-type(1)::after {
+  border: none;
+}
+
+.modal-content .wxLogin {
+  font-size: 26rpx;
+  color: #424242;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 38rpx 0 80rpx;
+}
+
+button::after {
+  border: none;
+}
