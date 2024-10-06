@@ -1,7 +1,6 @@
 {
   "pages": [
-
-    "pages/index/index",
+    "pages/first/first",
     "pages/goods-list/index",
     "pages/examples/index",
     "pages/user-center/index",
@@ -33,7 +32,7 @@
     "backgroundColor": "#ffffff",
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/first/first",
         "text": "快速开始",
         "iconPath": "images/icons/home.png",
         "selectedIconPath": "images/icons/home-active.png"

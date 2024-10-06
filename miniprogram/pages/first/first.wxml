@@ -2,6 +2,14 @@
 <text>pages/first/first.wxml</text>
 <view class="container">
   <!-- 页面其他内容 -->
+  <view class="search-bar-container">
+    <input class="search-bar"
+         type="text"
+         placeholder="搜索岗位，多个人用空格分开"
+         bindinput="onSearchInput"
+         bindconfirm="onSearchConfirm"
+         confirm-type="search"/>
+</view>
 
   <!-- 底部滚动区域 -->
   <scroll-view class="bottom-scroll" scroll-y="true">
