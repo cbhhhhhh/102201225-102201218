@@ -1,0 +1,252 @@
+/* pages/publishProject/publishProject.wxss */
+
+/* 容器样式 */
+.container {
+  padding: 20rpx;
+  /* 增加表单容器的顶部间距 */
+  padding-top: 40rpx;
+}
+
+/* 标题样式 */
+.title {
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #8B0000; /* 深红色 */
+  margin-bottom: 30rpx;
+  /* 增加标题的顶部间距 */
+  margin-top: 20rpx;
+}
+
+/* 表单样式 */
+.form {
+  margin-bottom: 30rpx;
+  /* 增加整个表单的顶部间距 */
+  margin-top: 20rpx;
+}
+
+/* 表单项样式 */
+.form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx; /* 增加表单项的底部间距 */
+}
+
+/* 标签样式 */
+.label {
+  flex: 1;
+  font-size: 32rpx;
+  color: #333;
+  /* 增加标签的左边距 */
+  margin-left: 20rpx;
+}
+
+/* 输入框样式 */
+.input {
+  flex: 2;
+  height: 60rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  /* 确保输入框紧随标签 */
+  margin-left: -50rpx;
+}
+
+/* 多行输入框样式 */
+.textarea {
+  flex: 2;
+  height: 200rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  padding: 10rpx 20rpx;
+  font-size: 30rpx;
+  margin-left: -50rpx;
+}
+
+/* 下拉选择框文本样式 */
+.picker-text {
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 30rpx;
+  color: #999;
+}
+
+/* 关键词容器 */
+.keywords-container {
+  flex: 2;
+  display: flex;
+  flex-wrap: nowrap; /* 不换行 */
+  align-items: center;
+  margin-left: -50rpx;
+  overflow-x: auto; /* 横向滚动，如果关键词过多 */
+}
+
+/* 关键词标签样式 */
+.keyword-tag {
+  display: inline-flex; /* 使用 inline-flex 以适应内容宽度 */
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 20rpx;
+  padding: 10rpx 20rpx;
+  margin-right: 10rpx; /* 关键词之间的间隔 */
+  white-space: nowrap; /* 防止文本换行 */
+}
+
+.keyword-tag text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 移除删除按钮样式已删除 */
+
+/* 添加关键词按钮样式 */
+.add-keyword-btn {
+  flex: 2; /* 与输入框同等的 flex 值 */
+  height: 60rpx;
+  border: 2rpx dashed #ccc;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+/* 上传区域容器样式 */
+.image-upload-container {
+  flex: 2; /* 与输入框同等的 flex 值 */
+  height: 200rpx; /* 固定高度，确保为正方形 */
+  border: 2rpx dashed #ccc; /* 虚线边框 */
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  position: relative;
+  /* 使用统一的左边距 */
+  margin-left: -73rpx;
+}
+
+/* 上传图片样式 */
+.upload-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx; /* 保持与容器一致的圆角 */
+}
+
+/* 上传占位符样式 */
+.upload-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 加号样式 */
+.plus-icon {
+  font-size: 80rpx;
+  color: #999;
+  font-weight: bold;
+}
+
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  justify-content: center; /* 改为居中对齐 */
+  gap: 20rpx; /* 如果支持，使用 gap */
+  margin-top: 20rpx;
+  width: 80%;
+}
+
+/* 按钮样式 */
+.cancel-button,
+.submit-button {
+  width: 40%; /* 调整宽度 */
+  height: 80rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  border-radius: 10rpx;
+  margin: 0 10rpx; /* 添加左右外边距 */
+}
+
+/* 取消按钮样式 */
+.cancel-button {
+  background-color: #ccc;
+  color: #fff;
+}
+
+/* 创建按钮样式 */
+.submit-button {
+  background-color: #8B0000; /* 深红色 */
+  color: #fff;
+}
+
+/* 模态弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 80%;
+  background-color: #fff;
+  border-radius: 10rpx;
+  padding: 20rpx;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.modal-header text {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.modal-body {
+  margin-bottom: 20rpx;
+}
+
+.modal-input {
+  width: 100%;
+  height: 60rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  padding: 0 20rpx;
+  font-size: 30rpx;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+}
+
+.modal-btn {
+  padding: 10rpx 20rpx;
+  border: none;
+  border-radius: 10rpx;
+  background-color: #8B0000;
+  color: #fff;
+  font-size: 28rpx;
+  cursor: pointer;
+}
+
+.modal-btn.cancel {
+  background-color: #ccc;
+}

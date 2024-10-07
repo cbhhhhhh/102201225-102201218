@@ -1,0 +1,32 @@
+<!-- pages/myProjects/myProjects.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">我的项目</text>
+  </view>
+  <view class="project-list">
+    <block wx:for="{{myProjects}}" wx:key="id">
+      <view class="project-item">
+        <image class="project-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        <view class="project-info">
+          <text class="project-name">{{item.name}}</text>
+          
+          <!-- 所需人数显示在右上角 -->
+          <text class="project-talent">{{item.talentNumber || '0'}}</text>
+          
+          <view class="project-tags">
+            <block wx:for="{{item.tags}}" wx:key="tag">
+              <text class="tag">{{item}}</text>
+            </block>
+          </view>
+          
+          <!-- 类别和创建时间换行展示 -->
+          <text class="project-category">类别：{{item.category}}</text>
+          <text class="project-createdAt">创建时间：{{item.formattedCreatedAt}}</text>
+        </view>
+      </view>
+    </block>
+    <view wx:if="{{myProjects.length === 0}}" class="no-projects">
+      <text>您还没有创建任何项目。</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,47 @@
+<view class="container">
+  <!-- Logo -->
+  <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+
+  <!-- Slogan -->
+  <text class="slogan">小福帮，创造无限可能！</text>
+
+  <!-- 输入框区域 -->
+  <view class="input-container">
+
+    <input
+      class="input"
+      placeholder="请输入账号"
+      bindinput="onAccountInput"
+    />
+
+    <!-- 密码输入框及切换按钮 -->
+    <view class="password-wrapper">
+      <input
+        class="input password-input"
+        placeholder="请输入密码"
+        password="{{!showPassword}}"
+        bindinput="onPasswordInput"
+      />
+      <!-- 密码切换图标按钮 -->
+      <view
+        class="toggle-password"
+        bindtap="togglePassword"
+        style="z-index: 10;"
+      >
+        <image src="{{showPassword ? '/images/eye-open.png' : '/images/eye-closed.png'}}" class="toggle-icon" />
+      </view>
+    </view>
+
+    <!-- 密码提示 -->
+    <text class="password-tip">**初始密码为123456</text>
+  </view>
+
+  <!-- 按钮区域 -->
+  <view class="button-container">
+    <!-- 登录按钮 -->
+    <button class="login-button" bindtap="onLogin">登录</button>
+
+    <!-- 注册按钮 -->
+    <button class="register-button" bindtap="onRegister">注册</button>
+  </view>
+</view>

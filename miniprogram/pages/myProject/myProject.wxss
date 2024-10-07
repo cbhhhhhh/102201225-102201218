@@ -1,0 +1,94 @@
+/* pages/myProjects/myProjects.wxss */
+
+.container {
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.project-item {
+  width: 700rpx;
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative; /* 使子元素可以绝对定位 */
+}
+
+.project-image {
+  width: 120px;
+  height: 120px;
+}
+
+.project-info {
+  flex: 1;
+  padding: 10px;
+  position: relative; /* 相对定位，以便子元素绝对定位 */
+}
+
+/* 项目名称样式 */
+.project-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* 所需人数样式 */
+.project-talent {
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  color: #28a745; /* 绿色 */
+  font-weight: bold;
+  font-size: 32px;
+}
+
+/* 关键词标签容器 */
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+  margin-top: 15rpx;
+}
+
+/* 标签样式 */
+.tag {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+/* 类别和创建时间样式 */
+.project-category,
+.project-createdAt {
+  font-size: 14px;
+  color: #999;
+  display: block; /* 确保每个文本占据一行 */
+  margin-bottom: 1.5px;
+}
+
+.no-projects {
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+  margin-top: 50px;
+}

@@ -1,0 +1,82 @@
+<!-- pages/publishProject/publishProject.wxml -->
+<view class="container">
+  <!-- 标题 -->
+  <view class="title">项目发起</view>
+
+  <!-- 表单内容 -->
+  <view class="form">
+    <!-- 项目名称 -->
+    <view class="form-item">
+      <text class="label">项目名称</text>
+      <input class="input" placeholder="请输入项目名称" value="{{projectName}}" bindinput="onProjectNameInput" />
+    </view>
+
+    <!-- 项目类型 -->
+    <view class="form-item">
+      <text class="label">项目类型</text>
+      <picker class="input" mode="selector" range="{{projectTypes}}" bindchange="onProjectTypeChange">
+        <view class="picker-text">{{selectedProjectType || '请选择项目类型'}}</view>
+      </picker>
+    </view>
+
+    <!-- 关键词 -->
+    <view class="form-item">
+      <text class="label">关键词</text>
+      <view class="keywords-container">
+        <!-- 显示已有关键词 -->
+        <view class="keyword-tag" wx:for="{{keywords}}" wx:key="index">
+          <text>{{item}}</text>
+        </view>
+        <!-- 如果关键词数量小于最大值，显示添加按钮 -->
+        <button wx:if="{{keywords.length < maxKeywords}}" class="add-keyword-btn" bindtap="showAddKeyword">＋</button>
+      </view>
+    </view>
+
+    <!-- 所需人才数量 -->
+    <view class="form-item">
+      <text class="label">人才数量</text>
+      <input class="input" type="number" placeholder="请输入所需人才数量" value="{{talentNumber}}" bindinput="onTalentNumberInput" />
+    </view>
+
+    <!-- 项目描述 -->
+    <view class="form-item">
+      <text class="label">项目描述</text>
+      <textarea class="textarea" placeholder="请输入项目描述" value="{{projectDescription}}" bindinput="onProjectDescriptionInput"></textarea>
+    </view>
+
+    <!-- 项目展示图片 -->
+    <view class="form-item">
+      <text class="label">项目展示</text>
+      <view class="image-upload-container" bindtap="onChooseImage">
+        <!-- 如果有预览图片，显示上传的图片；否则显示加号 -->
+        <image wx:if="{{previewImageUrl}}" src="{{previewImageUrl}}" class="upload-image" mode="aspectFill"></image>
+        <view wx:elif="{{!previewImageUrl}}" class="upload-placeholder">
+          <text class="plus-icon">+</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关键词输入弹窗 -->
+  <view wx:if="{{showKeywordInput}}" class="modal-overlay">
+    <view class="modal">
+      <view class="modal-header">
+        <text>添加关键词</text>
+        <!-- 移除删除按钮 -->
+      </view>
+      <view class="modal-body">
+        <input class="modal-input" placeholder="请输入关键词" value="{{newKeyword}}" bindinput="onNewKeywordInput" />
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn" bindtap="addKeyword">确定</button>
+        <button class="modal-btn cancel" bindtap="cancelAddKeyword">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="button-group">
+    <button class="cancel-button" bindtap="onCancel">取消</button>
+    <button class="submit-button" bindtap="onSubmit">创建</button>
+  </view>
+</view>

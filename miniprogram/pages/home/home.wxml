@@ -1,0 +1,13 @@
+<!-- pages/home/home.wxml -->
+<view class="container">
+  <!-- Slogan 图片 -->
+  <image class="slogan-image" src="/images/slogen.png" mode="aspectFit"></image>
+
+  <!-- 按钮组 -->
+  <view class="button-group">
+    <button class="home-button" bindtap="onCreateProject">发布项目</button>
+    <button class="home-button" bindtap="onJoinProject">加入项目</button>
+    <button class="home-button" bindtap="onMyProjects">我的项目</button>
+    <button class="home-button" bindtap="onSettings">设置</button> <!-- 第四个按钮，假设为“设置” -->
+  </view>
+</view>

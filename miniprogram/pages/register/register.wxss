@@ -1,0 +1,119 @@
+/* 页面整体容器 */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50rpx 10px;
+  background-color: #ffffff;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Logo样式 */
+.logo {
+  width: 280rpx;
+  height: 280rpx;
+  margin-top: 50rpx;
+}
+
+/* Slogan样式 */
+.slogan {
+  font-size: 32rpx;
+  color: #333333;
+  font-weight: bold;
+  margin-top: 20rpx;
+  text-align: center;
+}
+
+/* 输入框容器 */
+.input-container {
+  width: 100%;
+  max-width: 700rpx;
+  margin-top: 90rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 账号和密码输入框 */
+.input-container .input {
+  width: 80%; /* 输入框宽度调整为80% */
+  height: 80rpx;
+  border: none; /* 去掉边框 */
+  border-bottom: 2px solid #b66666; /* 增加底部边框作为下划线 */
+  padding: 0 20rpx;
+  margin-bottom: 30rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+/* 密码输入框容器 */
+.password-wrapper {
+  position: relative;
+  width: 80%; /* 容器宽度为80% */
+  display: flex; /* 使用flex布局，使输入框和图标水平排列 */
+  align-items: center; /* 垂直居中对齐 */
+}
+
+/* 密码输入框 */
+.password-input {
+  flex-grow: 1; /* 让输入框占据剩余的水平空间 */
+  border: none; /* 取消边框 */
+  height: 80rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+/* 密码切换按钮样式 */
+.toggle-password {
+  position: absolute;
+  right: 10rpx;
+  top: 30%;
+  transform: translateY(-50%);
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* 密码切换图标 */
+.toggle-icon {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+/* 按钮区域容器 */
+.button-container {
+  width: 80%; /* 与输入框宽度一致 */
+  max-width: 700rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30rpx;
+}
+
+/* 注册按钮样式 */
+.register-button {
+  width: 100%;
+  height: 80rpx;
+  background-color: #32e951;
+  color: #ffffff;
+  font-size: 30rpx;
+  border: none;
+  border-radius: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 取消按钮样式 */
+.cancel-button {
+  width: 100%;
+  height: 80rpx;
+  background-color: #a7a3a2;
+  color: #ffffff;
+  font-size: 30rpx;
+  border: none;
+  border-radius: 30rpx;
+}

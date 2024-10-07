@@ -1,0 +1,62 @@
+<!-- pages/profile/profile.wxml -->
+<view class="container">
+  <!-- 表单标题 -->
+  <view class="title">个人信息完善</view>
+
+  <!-- 表单内容 -->
+  <view class="form">
+    <!-- 姓名 -->
+    <view class="form-item">
+      <text class="label">姓名</text>
+      <input class="input" placeholder="请输入姓名" value="{{name}}" bindinput="onNameInput" />
+    </view>
+
+    <!-- 学号 -->
+    <view class="form-item">
+      <text class="label">学号</text>
+      <input class="input" placeholder="请输入学号" value="{{studentId}}" bindinput="onStudentIdInput" />
+    </view>
+
+    <!-- 学历 -->
+    <view class="form-item">
+      <text class="label">年级</text>
+      <picker class="input" mode="selector" range="{{educationLevels}}" bindchange="onEducationChange">
+        <view class="picker-text">
+          {{selectedEducation || '请选择年级'}}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 专业 -->
+    <view class="form-item">
+      <text class="label">专业</text>
+      <picker class="input" mode="selector" range="{{majors}}" bindchange="onMajorChange">
+        <view class="picker-text">
+          {{selectedMajor || '请选择专业'}}
+        </view>
+      </picker>
+    </view>
+
+
+    <!-- 学院 -->
+    <view class="form-item">
+      <text class="label">学院</text>
+      <input class="input" placeholder="请输入学院" value="{{college}}" bindinput="onCollegeInput" />
+    </view>
+
+    <!-- 电话 -->
+    <view class="form-item">
+      <text class="label">电话</text>
+      <input class="input" placeholder="请输入电话" value="{{phone}}" bindinput="onPhoneInput" />
+    </view>
+
+    <!-- 邮箱 -->
+    <view class="form-item">
+      <text class="label">邮箱</text>
+      <input class="input" placeholder="请输入邮箱" value="{{email}}" bindinput="onEmailInput" />
+    </view>
+  </view>
+
+  <!-- 完成按钮 -->
+  <button class="submit-button" bindtap="onSubmit">完成</button>
+</view>

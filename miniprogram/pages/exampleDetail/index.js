@@ -1,172 +1,66 @@
 // pages/exampleDetail/index.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    type: '',
-    envId: '',
-    showUploadTip: false,
 
-    haveGetOpenId: false,
-    openId: '',
-
-    haveGetCodeSrc: false,
-    codeSrc: '',
-
-    haveGetRecord: false,
-    record: '',
-
-    haveGetImgSrc: false,
-    imgSrc: '',
   },
 
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad(options) {
-    this.setData({ type: options?.type, envId: options?.envId });
+
   },
 
-  getOpenId() {
-    wx.showLoading({
-      title: '',
-    });
-    wx.cloud.callFunction({
-      name: 'quickstartFunctions',
-      config: {
-        env: this.data.envId
-      },
-      data: {
-        type: 'getOpenId'
-      }
-    }).then((resp) => {
-      this.setData({
-        haveGetOpenId: true,
-        openId: resp.result.openid
-      });
-      wx.hideLoading();
-    }).catch((e) => {
-      this.setData({
-        showUploadTip: true
-      });
-      wx.hideLoading();
-    });
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+
   },
 
-  clearOpenId() {
-    this.setData({
-      haveGetOpenId: false,
-      openId: ''
-    });
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+
   },
 
-  getCodeSrc() {
-    wx.showLoading({
-      title: '',
-    });
-    wx.cloud.callFunction({
-      name: 'quickstartFunctions',
-      config: {
-        env: this.data.envId
-      },
-      data: {
-        type: 'getMiniProgramCode'
-      }
-    }).then((resp) => {
-      this.setData({
-        haveGetCodeSrc: true,
-        codeSrc: resp.result
-      });
-      wx.hideLoading();
-    }).catch((e) => {
-      console.log(e);
-      this.setData({
-        showUploadTip: true
-      });
-      wx.hideLoading();
-    });
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+
   },
 
-  clearCodeSrc() {
-    this.setData({
-      haveGetCodeSrc: false,
-      codeSrc: ''
-    });
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
+
   },
 
-  getRecord() {
-    wx.showLoading({
-      title: '',
-    });
-    wx.cloud.callFunction({
-      name: 'quickstartFunctions',
-      config: {
-        env: this.data.envId
-      },
-      data: {
-        type: 'selectRecord'
-      }
-    }).then((resp) => {
-      this.setData({
-        haveGetRecord: true,
-        record: resp.result.data
-      });
-      wx.hideLoading();
-    }).catch((e) => {
-      console.log(e);
-      this.setData({
-        showUploadTip: true
-      });
-      wx.hideLoading();
-    });
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh() {
+
   },
 
-  clearRecord() {
-    this.setData({
-      haveGetRecord: false,
-      record: ''
-    });
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom() {
+
   },
 
-  uploadImg() {
-    wx.showLoading({
-      title: '',
-    });
-    // 让用户选择一张图片
-    wx.chooseImage({
-      count: 1,
-      success: chooseResult => {
-        // 将图片上传至云存储空间
-        wx.cloud.uploadFile({
-          // 指定上传到的云路径
-          cloudPath: 'my-photo.png',
-          // 指定要上传的文件的小程序临时文件路径
-          filePath: chooseResult.tempFilePaths[0],
-          config: {
-            env: this.data.envId
-          }
-        }).then(res => {
-          console.log('上传成功', res);
-          this.setData({
-            haveGetImgSrc: true,
-            imgSrc: res.fileID
-          });
-          wx.hideLoading();
-        }).catch((e) => {
-          console.log(e);
-          wx.hideLoading();
-        });
-      },
-    });
-  },
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage() {
 
-  clearImgSrc() {
-    this.setData({
-      haveGetImgSrc: false,
-      imgSrc: ''
-    });
-  },
-
-  goOfficialWebsite() {
-    const url = 'https://docs.cloudbase.net/toolbox/quick-start';
-    wx.navigateTo({
-      url: `../web/index?url=${url}`,
-    });
-  },
-
+  }
 })

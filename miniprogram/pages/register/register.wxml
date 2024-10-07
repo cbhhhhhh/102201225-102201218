@@ -1,0 +1,63 @@
+<view class="container">
+  <!-- Logo -->
+  <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+
+  <!-- Slogan -->
+  <text class="slogan">小福帮，创造无限可能！</text>
+
+  <!-- 输入框区域 -->
+  <view class="input-container">
+    <!-- 账号输入框 -->
+    <input
+      class="input account-input"
+      placeholder="请输入账号"
+      bindinput="onAccountInput"
+    />
+    
+    <!-- 密码输入框 -->
+    <view class="password-wrapper">
+      <input
+        class="input password-input"
+        placeholder="请输入密码"
+        password="{{!showPassword}}"
+        bindinput="onPasswordInput"
+      />
+      <!-- 密码切换图标按钮 -->
+      <view
+        class="toggle-password"
+        bindtap="togglePassword"
+        style="z-index: 10;"
+      >
+        <image src="{{showPassword ? '/images/eye-open.png' : '/images/eye-closed.png'}}" class="toggle-icon" />
+      </view>
+    </view>
+
+    <!-- 确认密码输入框 -->
+    <view class="password-wrapper">
+      <input
+        class="input password-input"
+        placeholder="请确认密码"
+        password="{{!showConfirmPassword}}"
+        bindinput="onConfirmPasswordInput"
+      />
+      <!-- 确认密码切换图标按钮 -->
+      <view
+        class="toggle-password"
+        bindtap="toggleConfirmPassword"
+        style="z-index: 10;"
+      >
+        <image src="{{showConfirmPassword ? '/images/eye-open.png' : '/images/eye-closed.png'}}" class="toggle-icon" />
+      </view>
+    </view>
+
+  </view>
+
+  <!-- 按钮区域 -->
+  <view class="button-container">
+    <!-- 注册按钮 -->
+    <button class="register-button" bindtap="onRegister">注册</button>
+
+    <!-- 取消按钮 -->
+    <button class="cancel-button" bindtap="onCancel">取消</button>
+  </view>
+</view>

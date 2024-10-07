@@ -1,3 +1,5 @@
+/* pages/me/index.wxss */
+
 .page_container {
   background-color: #f5f5f5;
   height: 100vh;
@@ -14,37 +16,86 @@
   border-top-right-radius: 30rpx;
   height: calc(100vh - 120rpx);
   position: relative;
+  padding-top: 60rpx; /* 增加内边距以适应头像和用户信息 */
 }
 
 .userinfo_container {
   display: flex;
-  gap: 80rpx;
-  align-items: center;
+  flex-direction: column;
+  align-items: center; /* 确保 .user_info 居中 */
   gap: 20rpx;
-  position: absolute;
-  top: -30rpx;
-  padding: 0rpx 60rpx;
+  padding: 0 60rpx;
+  margin-bottom: 40rpx;
+  position: relative; /* 为编辑按钮定位做准备 */
 }
 
 .avatar {
-  width: 128rpx;
-  height: 128rpx;
-  /* background-color: #e5e5e5; */
+  width: 200rpx; /* 增大头像尺寸 */
+  height: 160rpx;
   border-radius: 50%;
-  transform: scale(1.8);
+  transform: scale(1.0);
+  margin-top: -20rpx; /* 向上移动头像 */
+}
+
+.user_info {
+  width: 100%;
+  max-width: 600rpx; /* 设置最大宽度，防止占满整个容器 */
+  text-align: left; /* 左对齐文本 */
+  padding: 0 30rpx; /* 增加内边距，向右移动内容 */
 }
 
 .username {
-  color: #333;
-  font-size: 32rpx;
-  margin-top: 20rpx;
+  display: block; /* 每个标签独占一行 */
+  text-align: center; /* 姓名居中 */
   color: rgba(0, 0, 0, 0.9);
-  max-width: 200rpx;
+  font-size: 40rpx; /* 增大字体 */
+  margin-top: 0rpx; /* 去除顶部间距 */
+  margin-bottom: 30rpx; /* 增大姓名与其他信息的间距 */
+  font-weight: bold;
+  word-wrap: break-word; /* 启用换行 */
+  white-space: normal; /* 确保文本可以换行 */
+}
+
+.studentId,
+.education,
+.major,
+.grade,
+.college,
+.phone,
+.email {
+  display: block; /* 每个标签独占一行 */
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 32rpx; /* 增大字体 */
+  margin-top: 10rpx; /* 调整间距 */
+  font-weight: normal; /* 只让姓名加粗 */
+  word-wrap: break-word; /* 启用换行 */
+  white-space: normal; /* 确保文本可以换行 */
+}
+
+.edit_button {
+  position: absolute;
+  top: 0rpx; /* 调整位置，使其与头像重叠或在头像旁边 */
+  right: 20rpx; /* 距离右边缘 20rpx */
+  display: flex;
+  align-items: center;
+  gap: 5rpx;
+  background-color: rgba(0, 0, 0, 0.05); /* 背景色可选 */
+  padding: 5rpx 10rpx;
+  border-radius: 20rpx;
+  cursor: pointer;
+}
+
+.edit_icon {
+  width: 30rpx;
+  height: 30rpx;
+}
+
+.edit_text {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 28rpx;
 }
 
 .settings_container {
-  position: relative;
-  top: 150rpx;
   padding: 0 40rpx;
   display: flex;
   flex-direction: column;
@@ -55,7 +106,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30rpx 0rpx;
+  padding: 20rpx 0rpx;
   border-bottom: 1rpx solid rgba(0, 0, 0, 0.08);
   font-size: 28rpx;
 }
@@ -63,25 +114,7 @@
 .left {
   display: flex;
   align-items: center;
-  gap: 20rpx;
-}
-
-.contact-button {
-  padding-top: 10rpx;
-  padding-bottom: 10rpx;
-  box-sizing: border-box;
-  padding-left: 0rpx;
-  margin: 0;
-  width: 400rpx;
-  font-weight: 400;
-  font-size: 28rpx;
-  color: rgba(0, 0, 0, 0.9);
-  line-height: 56rpx;
-  text-align: left;
-}
-
-.button-hover {
-  background-color: #fff;
+  gap: 10rpx; /* 调整图标与文本之间的间距 */
 }
 
 .setting_icon {

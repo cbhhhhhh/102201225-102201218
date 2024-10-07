@@ -3,47 +3,42 @@
   <view class="top_bg" />
   <view class="main_content">
     <view class="userinfo_container">
-      <image class="avatar" src="../../images/icons/avatar.png" bind:tap="getOpenId" mode="widthFix" />
-      <block wx:if="{{ !openId }}">
-        <view class="username" bind:tap="getOpenId">请点击登录</view>
-      </block>
-      <block wx:else>
-        <view class="username">openId: {{ openId }}</view>
-      </block>
+      <!-- 头像图片，点击后触发 changeAvatar 方法 -->
+      <image
+        class="avatar"
+        src="{{userProfile.avatarUrl || '../../images/icons/avatar.png'}}"
+        bindtap="changeAvatar"
+        mode="widthFix"
+      />
+      <view class="user_info">
+        <text class="username">{{userProfile.name || '未填写姓名'}}</text>
+        <text class="studentId">学号：{{userProfile.studentId || '未填写学号'}}</text>
+        <text class="education">学历：{{userProfile.selectedEducation || '未填写学历'}}</text>
+        <text class="major">专业：{{userProfile.selectedMajor || '未填写专业'}}</text>
+        <text class="grade">年级：{{userProfile.grade || '未填写年级'}}</text>
+        <text class="college">学院：{{userProfile.college || '未填写学院'}}</text>
+        <text class="phone">电话：{{userProfile.phone || '未填写电话'}}</text>
+        <text class="email">邮箱：{{userProfile.email || '未填写邮箱'}}</text>
+      </view>
     </view>
     <view class="settings_container">
-      <!-- <view class="setting_item">
+      <!-- 编辑按钮 -->
+      <view class="setting_item" bindtap="editProfile">
         <view class="left">
-          <image class="setting_icon" src="../../images/icons/setting.svg" />
-          <view class="setting_text">个人信息设置</view>
-        </view>
-        <image class="arrow_icon" src="../../images/arrow.svg" />
-      </view> -->
-      <!-- <view class="setting_item">
-        <view class="left">
-          <image class="setting_icon" src="../../images/icons/question.svg" />
-          <view class="setting_text">常见问题</view>
-        </view>
-        <image class="arrow_icon" src="../../images/arrow.svg" />
-      </view> -->
-      <view class="setting_item">
-        <view class="left">
-          <image class="setting_icon" src="../../images/icons/customer-service.svg" />
-          <!-- <view class="setting_text">联系客服</view> -->
-          <button open-type="contact" class="contact-button">
-            联系客服
-          </button>
+          <image class="setting_icon" src="../../images/icons/edit.svg" />
+          <view class="setting_text">编辑信息</view>
         </view>
         <image class="arrow_icon" src="../../images/arrow.svg" />
       </view>
-      <view class="setting_item" bind:tap="gotoWxCodePage">
+      <!-- 登出按钮 -->
+      <view class="setting_item" bindtap="logout">
         <view class="left">
-          <image class="setting_icon" src="../../images/icons/share.svg" />
-          <view class="setting_text">分享小程序</view>
+          <image class="setting_icon" src="../../images/icons/logout.svg" />
+          <view class="setting_text">登出</view>
         </view>
         <image class="arrow_icon" src="../../images/arrow.svg" />
       </view>
     </view>
   </view>
-  <cloud-tip-modal showUploadTipProps="{{showUploadTip}}" />
+  <!-- <cloud-tip-modal showUploadTipProps="{{showUploadTip}}" /> -->
 </view>

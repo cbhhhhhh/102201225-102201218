@@ -1,0 +1,68 @@
+/* pages/profile/profile.wxss */
+
+/* 容器样式 */
+.container {
+  padding: 20rpx;
+  padding-top: 100rpx; /* 添加 padding-top，使整体内容下移 */
+}
+
+/* 标题样式 */
+.title {
+  text-align: center;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #8B0000; /* 深红色 */
+  margin-bottom: 60rpx; /* 增加 margin-bottom，加大标题与表单的间距 */
+}
+
+/* 表单样式 */
+.form {
+  margin-bottom: 30rpx;
+}
+
+/* 表单项样式 */
+.form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+/* 标签样式 */
+.label {
+  flex: 1;
+  font-size: 30rpx;
+}
+
+/* 输入框样式 */
+.input {
+  flex: 2;
+  height: 60rpx;
+  border: none; /* 移除边框 */
+  border-bottom: 1rpx solid #ccc; /* 添加下划线 */
+  padding: 0 20rpx;
+  background-color: transparent; /* 确保背景透明 */
+}
+
+/* 下拉选择框样式 */
+.picker {
+  flex: 2;
+  height: 60rpx;
+  line-height: 60rpx;
+  border: none; /* 移除边框 */
+  border-bottom: 1rpx solid #ccc; /* 添加下划线 */
+  font-size: 10px;
+  padding: 0 20rpx;
+  color: #999;
+  background-color: transparent; /* 确保背景透明 */
+}
+
+/* 完成按钮样式 */
+.submit-button {
+  width: 100%;
+  height: 80rpx;
+  background-color: #8B0000; /* 深红色 */
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  border-radius: 10rpx;
+}

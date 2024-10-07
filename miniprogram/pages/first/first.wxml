@@ -1,22 +1,124 @@
-<!--pages/first/first.wxml-->
-<text>pages/first/first.wxml</text>
 <view class="container">
-  <!-- 页面其他内容 -->
-  <view class="search-bar-container">
-    <input class="search-bar"
-         type="text"
-         placeholder="搜索岗位，多个人用空格分开"
-         bindinput="onSearchInput"
-         bindconfirm="onSearchConfirm"
-         confirm-type="search"/>
-</view>
+  <!-- 顶部搜索栏和筛选按钮 -->
+  <view class="header">
+    <input class="search-input" placeholder="搜索" bindinput="onSearchInput" />
+    <view class="filter-container" bindtap="onFilterTap">
+      <text class="filter-text">筛选</text>
+      <image class="filter-icon" src="/images/filter-icon.png" />
+    </view>
+  </view>
 
-  <!-- 底部滚动区域 -->
-  <scroll-view class="bottom-scroll" scroll-y="true">
-    <view class="scroll-item">块 1</view>
-    <view class="scroll-item">块 2</view>
-    <view class="scroll-item">块 3</view>
-    <view class="scroll-item">块 4</view>
-    <view class="scroll-item">块 5</view>
+  <!-- 分类标签栏 -->
+  <view class="category-bar">
+    <view
+      class="category-item {{activeCategory === 'all' ? 'active' : ''}}"
+      bindtap="onCategoryTap"
+      data-category="all"
+    >全部</view>
+    <view
+      class="category-item {{activeCategory === '社会实践' ? 'active' : ''}}"
+      bindtap="onCategoryTap"
+      data-category="社会实践"
+    >社会实践</view>
+    <view
+      class="category-item {{activeCategory === '创新创业' ? 'active' : ''}}"
+      bindtap="onCategoryTap"
+      data-category="创新创业"
+    >创新创业</view>
+    <view
+      class="category-item {{activeCategory === '科研比赛' ? 'active' : ''}}"
+      bindtap="onCategoryTap"
+      data-category="科研比赛"
+    >科研比赛</view>
+  </view>
+
+  <!-- 滑动内容区域 -->
+  <scroll-view scroll-y="true" class="project-list">
+    <!-- 每个项目栏 -->
+    <block wx:for="{{projects}}" wx:key="id">
+      <view class="project-item">
+        <image class="project-image" src="{{item.imageUrl}}" mode="aspectFill" />
+        <view class="project-info">
+          <view class="project-header">
+            <text class="project-name">{{item.name}}</text>
+            <text class="project-category">{{item.category}}</text>
+          </view>
+          <text class="project-description">{{item.description}}</text>
+          <view class="tag-container">
+            <block wx:for="{{item.tags}}" wx:key="*this">
+              <text class="project-tag">{{item}}</text>
+            </block>
+          </view>
+        </view>
+      </view>
+      <view class="divider"></view>
+    </block>
   </scroll-view>
+
+  <!-- 筛选界面 -->
+  <view class="filter-modal" wx:if="{{filterVisible}}">
+    <view class="filter-overlay" bindtap="onFilterTap"></view>
+    <view class="filter-content">
+      <!-- 项目类别 -->
+      <view class="filter-section">
+        <text class="filter-title">项目类别</text>
+        <view class="filter-options">
+          <block wx:for="{{categories}}" wx:key="*this">
+            <view
+              class="filter-option {{filterOptions.category === item ? 'selected' : ''}}"
+              data-category="{{item}}"
+              bindtap="onCategorySelect"
+            >{{item}}</view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 专业 -->
+      <view class="filter-section">
+        <text class="filter-title">专业</text>
+        <input
+          class="filter-input"
+          placeholder="请输入专业"
+          data-field="major"
+          value="{{filterOptions.major}}"
+          bindinput="onFilterChange"
+        />
+      </view>
+
+      <!-- 关键词 -->
+      <view class="filter-section">
+        <text class="filter-title">关键词</text>
+        <input
+          class="filter-input"
+          placeholder="请输入关键词"
+          data-field="keyword"
+          value="{{filterOptions.keyword}}"
+          bindinput="onFilterChange"
+        />
+      </view>
+
+      <!-- 是否需要相关经验 -->
+      <view class="filter-section">
+        <text class="filter-title">是否需要相关经验</text>
+        <view class="filter-options">
+          <block wx:for="{{experienceOptions}}" wx:key="*this">
+            <view
+              class="filter-checkbox"
+              data-option="{{item}}"
+              bindtap="onExperienceSelect"
+            >
+              <view class="checkbox {{filterOptions.experienceRequired === item ? 'checked' : ''}}"></view>
+              <text>{{item}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 底部按钮 -->
+      <view class="filter-buttons">
+        <button class="reset-button" bindtap="resetFilter">重置</button>
+        <button class="apply-button" bindtap="applyFilter">筛选</button>
+      </view>
+    </view>
+  </view>
 </view>
