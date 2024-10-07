@@ -111,7 +111,7 @@ Page({
    * 更新用户资料中的头像 URL
    */
   updateUserProfile(fileID) {
-    // 更新全局数据
+    // 更新全局数据和本地存储
     app.updateUserAvatar(fileID);
 
     // 更新页面数据

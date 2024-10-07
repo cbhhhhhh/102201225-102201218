@@ -1,12 +1,31 @@
 /* 页面整体容器 */
 .container {
+  position: relative; /* 为背景图像和内容定位 */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50rpx 10px;
-  background-color: #ffffff;
+  
   height: 100vh;
   box-sizing: border-box;
+  overflow: hidden; /* 防止内容溢出 */
+}
+
+/* 背景图像样式 */
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* 确保背景图像在最底层 */
+  object-fit: cover; /* 确保图像覆盖整个背景 */
+}
+
+/* 确保内容在背景图像之上 */
+.container {
+  position: relative;
+  z-index: 1;
 }
 
 /* Logo样式 */
@@ -14,6 +33,7 @@
   width: 280rpx;
   height: 280rpx;
   margin-top: 80rpx;
+  z-index: 1;
 }
 
 /* Slogan样式 */
@@ -23,7 +43,9 @@
   font-weight: bold;
   margin-top: 20rpx;
   text-align: center;
+  z-index: 1;
 }
+
 /* 输入框容器 */
 .input-container {
   width: 100%;
@@ -44,6 +66,7 @@
   margin-bottom: 30rpx;
   font-size: 28rpx;
   box-sizing: border-box;
+  z-index: 1;
 }
 
 /* 密码输入框容器，设置下划线覆盖整个容器，包括眼睛图标 */
@@ -52,7 +75,6 @@
   width: 80%; /* 容器宽度为80% */
   display: flex; /* 使用flex布局，使输入框和图标水平排列 */
   align-items: center; /* 垂直居中对齐 */
-  
 }
 
 /* 密码输入框，取消单独的下划线 */
@@ -68,38 +90,8 @@
 /* 密码切换按钮样式 */
 .toggle-password {
   position: absolute;
-  right: 10rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40rpx;
-  height: 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* 密码切换图标 */
-.toggle-icon {
-  width: 30rpx;
-  height: 30rpx;
-}
-
-/* 密码提示样式 */
-.password-tip {
-  width: 80%; /* 与输入框宽度一致 */
-  text-align: left;
-  font-size: 24rpx;
-  color: #888888;
-  margin-bottom: 20rpx;
-}
-
-
-/* 密码切换按钮样式 */
-.toggle-password {
-  position: absolute;
-  right: 30rpx; /* 向右缩进以适应输入框 */
-  top: 40%;
+  right: 18rpx; /* 向右缩进以适应输入框 */
+  top: 35%;
   transform: translateY(-50%);
   width: 60rpx;
   height: 60rpx;

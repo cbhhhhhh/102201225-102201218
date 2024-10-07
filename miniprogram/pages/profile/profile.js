@@ -11,7 +11,6 @@ Page({
     selectedEducation: '',
     majors: ['计算机科学与技术', '软件工程', '信息安全', '网络工程'],
     selectedMajor: '',
-    grade: '',
     college: '',
     phone: '',
     email: ''

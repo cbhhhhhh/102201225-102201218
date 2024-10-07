@@ -2,20 +2,43 @@
 
 /* 容器样式 */
 .container {
+  position: relative; /* 为背景图像和内容定位 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #ffffff;
+  justify-content: center; /* 垂直居中内容 */
+  width: 100%;
+  height: 100vh; /* 确保容器高度占满整个视口 */
+  overflow: hidden; /* 防止内容溢出 */
+  box-sizing: border-box;
+}
+
+/* 背景图像样式 */
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -5; /* 确保背景图像在最底层 */
+  object-fit: cover; 
+}
+
+/* 确保内容在背景图像之上 */
+.content {
+  position: relative;
+  z-index: 1; /* 内容层级高于背景图像 */
+  width: 100%;
+  padding: 20rpx;
+  box-sizing: border-box;
 }
 
 /* Slogan 图片样式 */
 .slogan-image {
-  width: 100%;
-  height: 25vh; /* 高度占界面四分之一 */
-  margin-top: 30rpx;
-  margin-left: 10rpx;
-  margin-right: 60rpx;
+  width: 80%; /* 调整为适合屏幕的宽度 */
+  height: auto; /* 自动调整高度以保持比例 */
   margin-bottom: 90rpx;
+  z-index: 1;
 }
 
 /* 按钮组样式 */
@@ -28,16 +51,24 @@
 
 /* 按钮样式 */
 .home-button {
-  width: 500rpx; /* 固定长度 */
+  width: 80%; /* 相对于屏幕宽度的百分比 */
+  max-width: 500rpx; /* 最大宽度限制 */
   height: 80rpx;
   margin-bottom: 30rpx;
-  background-color:#ffffff ; /* 白底 */
+  background-color: #ffffff; /* 白底 */
   color: #8B0000; /* 深红色字体 */
   font-size: 36rpx;
   font-weight: bold;
   text-align: center;
-  line-height: 45rpx;
+  line-height: 50rpx; /* 与高度相同，实现垂直居中 */
   border: 2rpx solid #8B0000; /* 深红色方框 */
   border-radius: 10rpx;
   box-shadow: 5rpx 5rpx 10rpx rgba(0, 0, 0, 0.3); /* 斜向右下侧的阴影 */
+  cursor: pointer;
+}
+
+/* 按钮点击效果 */
+.home-button:active {
+  box-shadow: 2rpx 2rpx 5rpx rgba(0, 0, 0, 0.3);
+  transform: translateY(2rpx);
 }

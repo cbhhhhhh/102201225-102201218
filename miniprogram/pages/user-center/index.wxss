@@ -4,21 +4,32 @@
   background-color: #f5f5f5;
   height: 100vh;
   font-family: PingFang SC;
+  position: relative;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
+/* 固定在顶部的背景 */
 .top_bg {
-  height: 120rpx;
+  height: 200rpx; /* 深红色背景高度 */
+  background-color: #8B0000; /* 深红色 */
+  position: fixed; /* 固定定位 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0; /* 确保在其他内容之上 */
 }
 
+/* 可滚动的主内容区域 */
 .main_content {
   background-color: #fff;
   border-top-left-radius: 30rpx;
   border-top-right-radius: 30rpx;
-  height: calc(100vh - 120rpx);
-  position: relative;
-  padding-top: 60rpx; /* 增加内边距以适应头像和用户信息 */
+  height: 100vh; /* 全屏高度 */
+  padding-top: 140rpx; /* 增加内边距以适应头像和用户信息，避免被 fixed 的 top_bg 覆盖 */
+  box-sizing: border-box;
 }
 
+/* 用户信息容器 */
 .userinfo_container {
   display: flex;
   flex-direction: column;
@@ -26,17 +37,30 @@
   gap: 20rpx;
   padding: 0 60rpx;
   margin-bottom: 40rpx;
-  position: relative; /* 为编辑按钮定位做准备 */
+  position: relative;
+  /* 移除 margin-top: -150rpx */
 }
 
+/* 头像容器 */
+.avatar_container {
+  width: 220rpx; /* 固定正方形 */
+  height: 220rpx;
+  border-radius: 50%; /* 使头像圆形 */
+  overflow: hidden; /* 确保头像自适应容器 */
+  border: 4rpx solid #fff; /* 可选：添加白色边框 */
+  background-color: #fff; /* 可选：背景色 */
+  margin-bottom: 20rpx; /* 头像下方的间距 */
+  box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.2); /* 可选：添加阴影效果 */
+}
+
+/* 头像图片 */
 .avatar {
-  width: 200rpx; /* 增大头像尺寸 */
-  height: 160rpx;
-  border-radius: 50%;
-  transform: scale(1.0);
-  margin-top: -20rpx; /* 向上移动头像 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 头像自适应容器 */
 }
 
+/* 用户信息文本 */
 .user_info {
   width: 100%;
   max-width: 600rpx; /* 设置最大宽度，防止占满整个容器 */
@@ -66,10 +90,11 @@
   display: block; /* 每个标签独占一行 */
   color: rgba(0, 0, 0, 0.7);
   font-size: 32rpx; /* 增大字体 */
-  margin-top: 10rpx; /* 调整间距 */
+  margin-top: 15rpx; /* 调整间距 */
   font-weight: normal; /* 只让姓名加粗 */
   word-wrap: break-word; /* 启用换行 */
   white-space: normal; /* 确保文本可以换行 */
+  margin-left: 20rpx;
 }
 
 .edit_button {

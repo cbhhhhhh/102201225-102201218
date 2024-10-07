@@ -1,4 +1,6 @@
 <view class="container">
+  <image class="background-image" src="/images/login_bg.jpg" mode="aspectFill"></image>
+  
   <!-- Logo -->
   <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
 

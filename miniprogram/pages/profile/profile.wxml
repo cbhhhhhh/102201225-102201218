@@ -1,5 +1,7 @@
 <!-- pages/profile/profile.wxml -->
 <view class="container">
+  <image class="background-image" src="/images/login_bg.jpg" mode="aspectFill"></image>
+  
   <!-- 表单标题 -->
   <view class="title">个人信息完善</view>
 

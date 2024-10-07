@@ -2,17 +2,33 @@
 
 /* 容器样式 */
 .container {
+  position: relative; /* 为背景图像和内容定位 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden; /* 防止内容溢出 */
   padding: 20rpx;
   padding-top: 100rpx; /* 添加 padding-top，使整体内容下移 */
 }
 
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -5; /* 确保背景图像在最底层 */
+  object-fit: cover; /* 确保图像覆盖整个背景 */
+}
 /* 标题样式 */
 .title {
   text-align: center;
-  font-size: 36rpx;
+  font-size: 40rpx;
   font-weight: bold;
   color: #8B0000; /* 深红色 */
-  margin-bottom: 60rpx; /* 增加 margin-bottom，加大标题与表单的间距 */
+  margin-bottom: 90rpx; /* 增加 margin-bottom，加大标题与表单的间距 */
 }
 
 /* 表单样式 */
@@ -31,6 +47,7 @@
 .label {
   flex: 1;
   font-size: 30rpx;
+  font-weight: bold;
 }
 
 /* 输入框样式 */
