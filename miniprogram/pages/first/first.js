@@ -48,7 +48,13 @@ Page({
     // 根据选择的类别和搜索关键字筛选项目
     this.filterProjects();
   },
-
+  // 点击项目，跳转到详情页
+  onProjectTap(e) {
+    const projectId = e.currentTarget.dataset.projectId;
+    wx.navigateTo({
+      url: `/pages/ProjectDetail/ProjectDetail?id=${projectId}`,
+    });
+  },
   // 搜索输入事件
   onSearchInput(e) {
     const keyword = e.detail.value;
@@ -102,7 +108,9 @@ Page({
     if (filterOptions.experienceRequired) {
       filteredProjects = filteredProjects.filter(item => item.experienceRequired === filterOptions.experienceRequired);
     }
-
+    // 更新项目列表前，对项目按照创建时间降序排序
+    filteredProjects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
     // 更新项目列表
     this.setData({
       projects: filteredProjects

@@ -40,7 +40,6 @@ Page({
     });
   },
 
-
   // 显示关键词输入框
   showAddKeyword() {
     this.setData({
@@ -92,12 +91,39 @@ Page({
     });
   },
 
-  // 删除关键词方法已移除
+  // 取消添加关键词
+  cancelAddKeyword() {
+    this.setData({
+      showKeywordInput: false,
+      newKeyword: '',
+    });
+  },
 
   // 人才数量输入
   onTalentNumberInput(e) {
+    let inputVal = e.detail.value;
+
+    // 使用正则表达式移除所有非数字字符（虽然 type="digit" 已限制，但为了保险）
+    inputVal = inputVal.replace(/\D/g, '');
+
+    // 可选：限制最大值，例如 99999
+    const maxVal = 99999;
+    if (inputVal) {
+      let num = parseInt(inputVal, 10);
+      if (isNaN(num)) {
+        num = '';
+      } else if (num > maxVal) {
+        num = maxVal;
+        wx.showToast({
+          title: `人才数量不能超过${maxVal}`,
+          icon: 'none',
+        });
+      }
+      inputVal = num.toString();
+    }
+
     this.setData({
-      talentNumber: e.detail.value,
+      talentNumber: inputVal,
     });
   },
 
@@ -131,9 +157,20 @@ Page({
       });
       return;
     }
-    // 可以继续添加其他验证...
-
-    // 如果有上传的图片，确保 imageUrl 已经上传
+    if (!this.data.talentNumber || parseInt(this.data.talentNumber, 10) <= 0) {
+      wx.showToast({
+        title: '请输入有效的人才数量',
+        icon: 'none',
+      });
+      return;
+    }
+    if (!this.data.projectDescription) {
+      wx.showToast({
+        title: '请输入项目描述',
+        icon: 'none',
+      });
+      return;
+    }
     if (!this.data.imageUrl) {
       wx.showToast({
         title: '请上传项目展示图片',
@@ -148,7 +185,7 @@ Page({
       name: this.data.projectName,
       category: this.data.selectedProjectType,
       tags: this.data.keywords, // 直接使用数组
-      talentNumber: this.data.talentNumber,
+      talentNumber: parseInt(this.data.talentNumber, 10), // 确保为数字
       description: this.data.projectDescription,
       imageUrl: this.data.imageUrl, // 使用上传后的图片URL
       createdAt: new Date().toISOString() // 添加创建时间
@@ -161,10 +198,8 @@ Page({
     // 将新项目添加到我的项目列表中
     app.globalData.myProjects.unshift(projectData);
 
-    // 保存数据到本地存储（如果已实现持久化）
-    if (app.saveProjects) {
-      app.saveProjects();
-    }
+    // 保存项目到本地存储
+    app.saveProjects();
 
     wx.showToast({
       title: '项目创建成功',
@@ -238,49 +273,35 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() {
-
-  },
+  onReady() {},
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow() {
-
-  },
+  onShow() {},
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide() {
-
-  },
+  onHide() {},
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload() {
-
-  },
+  onUnload() {},
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh() {
-
-  },
+  onPullDownRefresh() {},
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom() {
-
-  },
+  onReachBottom() {},
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() {
-
-  }
+  onShareAppMessage() {},
 });

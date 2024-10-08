@@ -35,7 +35,7 @@
     <!-- 所需人才数量 -->
     <view class="form-item">
       <text class="label">人才数量</text>
-      <input class="input" type="number" placeholder="请输入所需人才数量" value="{{talentNumber}}" bindinput="onTalentNumberInput" />
+      <input class="input" type="digit" placeholder="请输入所需人才数量" value="{{talentNumber}}" bindinput="onTalentNumberInput" />
     </view>
 
     <!-- 项目描述 -->
@@ -56,7 +56,7 @@
       </view>
     </view>
   </view>
-
+  
   <!-- 关键词输入弹窗 -->
   <view wx:if="{{showKeywordInput}}" class="modal-overlay">
     <view class="modal">

@@ -11,8 +11,9 @@ App({
         description: '深入乡村，为留守儿童提供教育支持。',
         category: '社会实践',
         tags: ['支教', '志愿者', '乡村'],
+        talentNumber: 5,
         imageUrl: '/images/home.png',
-        createdAt: '2024-04-27T14:30:00Z' // 添加创建时间
+        createdAt: '2024-04-27T14:30:00Z'
       },
       {
         id: 2,
@@ -20,6 +21,7 @@ App({
         description: '组织环保活动，提高公众环保意识。',
         category: '社会实践',
         tags: ['环保', '公益', '宣传'],
+        talentNumber: 3,
         imageUrl: '/images/project2.jpg',
         createdAt: '2024-04-28T09:15:00Z'
       },
@@ -30,6 +32,7 @@ App({
         description: '搭建供师生使用的二手物品交易平台。',
         category: '创新创业',
         tags: ['创业', '电商', '校园'],
+        talentNumber: 4,
         imageUrl: '/images/project3.jpg',
         createdAt: '2024-05-01T10:00:00Z'
       },
@@ -39,6 +42,7 @@ App({
         description: '开发一套基于物联网的智能家居系统。',
         category: '创新创业',
         tags: ['智能家居', '物联网', '创新'],
+        talentNumber: 6,
         imageUrl: '/images/project4.jpg',
         createdAt: '2024-05-02T11:20:00Z'
       },
@@ -49,6 +53,7 @@ App({
         description: '备战全国大学生数学建模竞赛，提升建模能力。',
         category: '科研比赛',
         tags: ['数学建模', '竞赛', '培训'],
+        talentNumber: 2,
         imageUrl: '/images/project5.jpg',
         createdAt: '2024-05-03T08:45:00Z'
       },
@@ -58,6 +63,7 @@ App({
         description: '参加机器人设计大赛，培养实践能力。',
         category: '科研比赛',
         tags: ['机器人', '设计', '比赛'],
+        talentNumber: 3,
         imageUrl: '/images/project6.jpg',
         createdAt: '2024-05-04T14:10:00Z'
       }
@@ -98,17 +104,21 @@ App({
    * 从本地存储加载数据
    */
   loadData: function () {
-    // 加载 myProjects
-    const myProjects = wx.getStorageSync('myProjects');
-    if (myProjects && Array.isArray(myProjects)) {
-      this.globalData.myProjects = myProjects;
-    }
+    const app = this;
+
+  // 加载 myProjects（用户创建的项目）
+  const myProjects = wx.getStorageSync('myProjects');
+  if (myProjects && Array.isArray(myProjects)) {
+    app.globalData.myProjects = myProjects;
+    // 将用户创建的项目合并到 allProjects 中，放在初始项目之前
+    app.globalData.allProjects = myProjects.concat(app.globalData.allProjects);
+  } 
 
     // 加载 userProfile
     const storedUserProfile = wx.getStorageSync('userProfile');
     if (storedUserProfile && typeof storedUserProfile === 'object') {
       // 确保 avatarUrl 存在
-      this.globalData.userProfile = {
+      app.globalData.userProfile = {
         avatarUrl: '',
         ...storedUserProfile
       };
@@ -116,7 +126,7 @@ App({
   },
 
   /**
-   * 保存项目数据到本地存储
+   * 保存用户创建的项目到本地存储
    */
   saveProjects: function () {
     wx.setStorageSync('myProjects', this.globalData.myProjects);

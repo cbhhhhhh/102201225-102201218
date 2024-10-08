@@ -6,7 +6,7 @@
 <!-- 内容容器，确保在背景图之上 -->
 <view class="content">
   <!-- Slogan 图片 -->
-  <image class="slogan-image" src="/images/slogan.png" mode="aspectFill"></image>
+  <image class="slogan-image" src="../images/slogen.png" mode="aspectFill"></image>
 
   <!-- 按钮组 -->
   <view class="button-group">

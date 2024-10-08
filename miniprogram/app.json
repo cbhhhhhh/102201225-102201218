@@ -5,6 +5,7 @@
     "pages/profile/profile",
     "pages/home/home",
     "pages/CreateProject/CreateProject",
+    "pages/ProjectDetail/ProjectDetail",
     "pages/myProject/myProject",
     "pages/first/first",
     "pages/goods-list/index",
