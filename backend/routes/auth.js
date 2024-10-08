@@ -6,30 +6,30 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // 用户注册
-// router.post("/register", async (req, res) => {
-//   const { student_id, password } = req.body;
-//   try {
-//     if (!student_id || !password) {
-//       return res
-//         .status(400)
-//         .json({ error: "Student ID and password are required." });
-//     }
+router.post("/register", async (req, res) => {
+  const { student_id, password } = req.body;
+  try {
+    if (!student_id || !password) {
+      return res
+        .status(400)
+        .json({ error: "Student ID and password are required." });
+    }
 
-//     const saltRounds = 10; // 定义盐的轮数
-//     const salt = await bcrypt.genSalt(saltRounds); // 生成盐
-//     const hashedPassword = await bcrypt.hash(password, salt); // 哈希密码
+    const saltRounds = 10; // 定义盐的轮数
+    const salt = await bcrypt.genSalt(saltRounds); // 生成盐
+    const hashedPassword = await bcrypt.hash(password, salt); // 哈希密码
 
-//     const user = await User.register({
-//       student_id,
-//       password: hashedPassword, // 存储哈希后的密码
-//     });
-//     res.json({ message: "注册成功", user });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
+    const user = await User.register({
+      student_id,
+      password: hashedPassword, // 存储哈希后的密码
+    });
+    res.json({ message: "注册成功", user });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-//原始
+// //原始
 // router.post("/register", async (req, res) => {
 //   try {
 //     const user = await User.register(req.body);
@@ -39,27 +39,27 @@ const jwt = require("jsonwebtoken");
 //   }
 // });
 
-//姓名必须且非空时
-router.post("/register", async (req, res) => {
-  const { student_id, password, name } = req.body; // 提取所有字段
-  try {
-    if (!name) {
-      return res.status(400).json({ error: "Name is required" }); // 处理缺少 name 的情况
-    }
-    const saltRounds = 10; // 定义盐的轮数
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(password, salt); // 确保提供盐值
+// //姓名必须且非空时
+// router.post("/register", async (req, res) => {
+//   const { student_id, password, name } = req.body; // 提取所有字段
+//   try {
+//     if (!name) {
+//       return res.status(400).json({ error: "Name is required" }); // 处理缺少 name 的情况
+//     }
+//     const saltRounds = 10; // 定义盐的轮数
+//     const salt = await bcrypt.genSalt(saltRounds);
+//     const hashedPassword = await bcrypt.hash(password, salt); // 确保提供盐值
 
-    const user = await User.register({
-      student_id,
-      password: hashedPassword, // 存储哈希后的密码
-      name, // 确保将 name 字段包含在内
-    });
-    res.json({ message: "注册成功", user });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+//     const user = await User.register({
+//       student_id,
+//       password: hashedPassword, // 存储哈希后的密码
+//       name, // 确保将 name 字段包含在内
+//     });
+//     res.json({ message: "注册成功", user });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
 // 用户登录
 router.post("/login", async (req, res) => {
