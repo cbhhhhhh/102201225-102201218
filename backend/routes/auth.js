@@ -64,54 +64,68 @@ router.post("/register", async (req, res) => {
 // 用户登录
 router.post("/login", async (req, res) => {
   try {
-    // 确保请求体中有必要字段
-    const { student_id, password } = req.body;
-    if (!student_id || !password) {
-      return res.status(400).json({ message: "学号和密码是必填字段" });
-    }
-
-    const user = await User.login(req.body.student_id, req.body.password);
+    const user = await User.findByEmail(req.body.email);
     if (!user) return res.status(400).json({ message: "用户不存在" });
 
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (!isMatch) return res.status(400).json({ message: "密码错误" });
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-
-    // 检查用户信息是否完整
-    if (!user.name || !user.major) {
-      return res.json({
-        message: "登录成功，信息完善",
-        token,
-        user: {
-          id: user.id,
-          student_id: user.student_id,
-          name: user.name, // 可以是空???
-          major: user.major, // 可以是空???
-        },
-        redirect: "/complete-profile", // 指向信息完善页面????
-      });
-    }
-
-    res.json({
-      message: "登录成功",
-      token,
-      user: {
-        id: user.id,
-        student_id: user.student_id,
-        name: user.name,
-        major: user.major,
-        grade: user.grade,
-        phone: user.phone,
-        email: user.email,
-        // 更多用户信息
-      },
-    });
+    res.json({ message: "登录成功", token, user });
   } catch (err) {
-    // 处理未预料的错误
-    console.error("登录时发生错误:", err.message);
-    res.status(500).json({ message: "服务器错误" });
+    res.status(500).json({ error: err.message });
   }
 });
+// router.post("/login", async (req, res) => {
+//   try {
+//     // 确保请求体中有必要字段
+//     const { student_id, password } = req.body;
+//     if (!student_id || !password) {
+//       return res.status(400).json({ message: "学号和密码是必填字段" });
+//     }
+
+//     const user = await User.login(req.body.student_id, req.body.password);
+//     if (!user) return res.status(400).json({ message: "用户不存在" });
+
+//     const isMatch = await bcrypt.compare(req.body.password, user.password);
+//     if (!isMatch) return res.status(400).json({ message: "密码错误" });
+
+//     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+
+//     // 检查用户信息是否完整
+//     if (!user.name || !user.major) {
+//       return res.json({
+//         message: "登录成功，信息完善",
+//         token,
+//         user: {
+//           id: user.id,
+//           student_id: user.student_id,
+//           name: user.name, // 可以是空???
+//           major: user.major, // 可以是空???
+//         },
+//         redirect: "/complete-profile", // 指向信息完善页面????
+//       });
+//     }
+
+//     res.json({
+//       message: "登录成功",
+//       token,
+//       user: {
+//         id: user.id,
+//         student_id: user.student_id,
+//         name: user.name,
+//         major: user.major,
+//         grade: user.grade,
+//         phone: user.phone,
+//         email: user.email,
+//         // 更多用户信息
+//       },
+//     });
+//   } catch (err) {
+//     // 处理未预料的错误
+//     console.error("登录时发生错误:", err.message);
+//     res.status(500).json({ message: "服务器错误" });
+//   }
+// });
 
 module.exports = router;
