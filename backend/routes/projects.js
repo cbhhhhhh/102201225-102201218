@@ -16,7 +16,7 @@ router.post("/", authMiddleware, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
- 
+
 // 获取所有项目
 router.get("/", async (req, res) => {
   try {
@@ -42,6 +42,16 @@ router.get("/my-projects", authMiddleware, async (req, res) => {
   try {
     const projects = await Project.findByUserId(req.user.id);
     res.json(projects);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 删除项目
+router.delete("/:project_id", authMiddleware, async (req, res) => {
+  try {
+    await Project.delete(req.params.project_id, req.user.id);
+    res.json({ message: "项目删除成功" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
