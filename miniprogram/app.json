@@ -8,6 +8,7 @@
     "pages/ProjectDetail/ProjectDetail",
     "pages/myProject/myProject",
     "pages/first/first",
+    "pages/chat/chat",
     "pages/goods-list/index",
     "pages/examples/index",
     "pages/user-center/index",
@@ -51,8 +52,8 @@
         "selectedIconPath": "images/icons/home-active.png"
       },
       {
-        "pagePath": "pages/business/index",
-        "text": "业务示例",
+        "pagePath": "pages/chat/chat",
+        "text": "聊天",
         "iconPath": "images/icons/business.png",
         "selectedIconPath": "images/icons/business-active.png"
       },

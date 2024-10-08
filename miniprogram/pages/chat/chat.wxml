@@ -1,0 +1,19 @@
+<view class="chat-container">
+  <!-- 聊天消息展示区域 -->
+  <scroll-view class="message-list" scroll-y="true" scroll-with-animation="true" scroll-top="{{scrollTop}}">
+    <block wx:for="{{messages}}" wx:key="{{item._id}}">
+      <view class="message-item {{item.from === userId ? 'message-right' : 'message-left'}}">
+        <!-- 头像 -->
+        <image class="avatar" src="{{item.from === userId ? myAvatarUrl : otherAvatarUrl}}" />
+        <!-- 消息气泡 -->
+        <view class="message-content">{{item.content}}</view>
+      </view>
+    </block>
+  </scroll-view>
+
+  <!-- 输入框和发送按钮 -->
+  <view class="input-area">
+    <input class="message-input" value="{{inputMessage}}" bindinput="onInputMessage" placeholder="请输入消息..." />
+    <button class="send-button" bindtap="sendMessage">发送</button>
+  </view>
+</view>

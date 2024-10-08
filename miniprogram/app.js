@@ -78,7 +78,8 @@ App({
       college: '',
       phone: '',
       email: '',
-      avatarUrl: '' // 初始化头像 URL
+      avatarUrl: '', // 初始化头像 URL
+      openid: '' // 新增：用于存储用户的 OpenID
     } // 用于存储用户个人信息
   },
 
@@ -96,8 +97,35 @@ App({
       });
     }
 
-    // 从本地存储加载数据
-    this.loadData();
+    // 调用获取用户 OpenID 的方法，并等待完成
+    this.getUserOpenId().then(openid => {
+      console.log('获取到 OpenID：', openid);
+      // 可以在这里执行需要依赖 OpenID 的初始化操作
+    }).catch(err => {
+      console.error('获取 OpenID 失败：', err);
+    });
+  },
+
+  getUserOpenId: function () {
+    const app = this;
+    return new Promise((resolve, reject) => {
+      wx.cloud.callFunction({
+        name: 'login', // 云函数名称
+        data: {},
+        success: res => {
+          console.log('云函数 [login] 调用成功：', res);
+          app.globalData.userProfile.openid = res.result.openid;
+
+          // 获取到 OpenID 后，加载用户数据
+          app.loadData();
+          resolve(res.result.openid);
+        },
+        fail: err => {
+          console.error('云函数 [login] 调用失败：', err);
+          reject(err);
+        }
+      });
+    });
   },
 
   /**
@@ -105,23 +133,29 @@ App({
    */
   loadData: function () {
     const app = this;
+    const openid = app.globalData.userProfile.openid;
 
-  // 加载 myProjects（用户创建的项目）
-  const myProjects = wx.getStorageSync('myProjects');
-  if (myProjects && Array.isArray(myProjects)) {
-    app.globalData.myProjects = myProjects;
-    // 将用户创建的项目合并到 allProjects 中，放在初始项目之前
-    app.globalData.allProjects = myProjects.concat(app.globalData.allProjects);
-  } 
+    if (openid) {
+      // 加载 myProjects（用户创建的项目）
+      const myProjects = wx.getStorageSync(`myProjects_${openid}`);
+      if (myProjects && Array.isArray(myProjects)) {
+        app.globalData.myProjects = myProjects;
+        // 将用户创建的项目合并到 allProjects 中，放在初始项目之前
+        app.globalData.allProjects = myProjects.concat(app.globalData.allProjects);
+      }
 
-    // 加载 userProfile
-    const storedUserProfile = wx.getStorageSync('userProfile');
-    if (storedUserProfile && typeof storedUserProfile === 'object') {
-      // 确保 avatarUrl 存在
-      app.globalData.userProfile = {
-        avatarUrl: '',
-        ...storedUserProfile
-      };
+      // 加载 userProfile
+      const storedUserProfile = wx.getStorageSync(`userProfile_${openid}`);
+      if (storedUserProfile && typeof storedUserProfile === 'object') {
+        // 确保 avatarUrl 存在
+        app.globalData.userProfile = {
+          avatarUrl: '',
+          ...storedUserProfile,
+          openid: openid // 保持 OpenID 一致
+        };
+      }
+    } else {
+      console.warn('OpenID 尚未获取，无法加载用户数据');
     }
   },
 
@@ -129,14 +163,24 @@ App({
    * 保存用户创建的项目到本地存储
    */
   saveProjects: function () {
-    wx.setStorageSync('myProjects', this.globalData.myProjects);
+    const openid = this.globalData.userProfile.openid;
+    if (openid) {
+      wx.setStorageSync(`myProjects_${openid}`, this.globalData.myProjects);
+    } else {
+      console.warn('OpenID 尚未获取，无法保存用户项目');
+    }
   },
 
   /**
    * 保存用户信息到本地存储
    */
   saveUserProfile: function () {
-    wx.setStorageSync('userProfile', this.globalData.userProfile);
+    const openid = this.globalData.userProfile.openid;
+    if (openid) {
+      wx.setStorageSync(`userProfile_${openid}`, this.globalData.userProfile);
+    } else {
+      console.warn('OpenID 尚未获取，无法保存用户信息');
+    }
   },
 
   /**

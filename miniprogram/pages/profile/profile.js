@@ -20,56 +20,42 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    const app = getApp();
 
+    // 检查是否已经获取到 openid
+    if (!app.globalData.userProfile.openid) {
+      // 如果未获取到，调用获取 openid 的方法
+      app.getUserOpenId().then(openid => {
+        console.log('OpenID 已获取：', openid);
+        // 加载用户信息
+        this.loadUserProfile();
+      }).catch(err => {
+        wx.showToast({
+          title: '无法获取用户信息，请重试',
+          icon: 'none',
+        });
+      });
+    } else {
+      // 如果已经获取到 openid，直接加载用户信息
+      this.loadUserProfile();
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
+  // 从全局数据加载用户信息
+  loadUserProfile() {
+    const app = getApp();
+    const userProfile = app.globalData.userProfile;
 
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+    // 更新页面数据
+    this.setData({
+      name: userProfile.name || '',
+      studentId: userProfile.studentId || '',
+      selectedEducation: userProfile.selectedEducation || '',
+      selectedMajor: userProfile.selectedMajor || '',
+      college: userProfile.college || '',
+      phone: userProfile.phone || '',
+      email: userProfile.email || ''
+    });
   },
 
   // 姓名输入
@@ -144,9 +130,49 @@ Page({
       return;
     }
 
-    // 保存用户信息到全局数据和本地存储
     const app = getApp();
+
+    // 检查是否已经获取到 openid
+    if (!app.globalData.userProfile.openid) {
+      wx.showToast({
+        title: '正在获取用户信息，请稍后重试',
+        icon: 'none',
+      });
+      // 重新获取 OpenID
+      app.getUserOpenId().then(openid => {
+        console.log('OpenID 已获取：', openid);
+        // 继续提交
+        this.submitUserProfile();
+      }).catch(err => {
+        wx.showToast({
+          title: '无法获取用户信息，请重试',
+          icon: 'none',
+        });
+      });
+      return;
+    }
+
+    // 如果已经有 OpenID，直接提交
+    this.submitUserProfile();
+  },
+
+  // 新增方法，用于提交用户信息
+  submitUserProfile() {
+    const {
+      name,
+      studentId,
+      selectedEducation,
+      selectedMajor,
+      college,
+      phone,
+      email
+    } = this.data;
+
+    const app = getApp();
+
+    // 更新全局用户信息
     app.globalData.userProfile = {
+      ...app.globalData.userProfile, // 保留已有的 openid 和 avatarUrl
       name,
       studentId,
       selectedEducation,
@@ -156,6 +182,8 @@ Page({
       phone,
       email
     };
+
+    // 保存用户信息到本地存储
     app.saveUserProfile();
 
     // 显示提交成功的提示
