@@ -48,61 +48,49 @@ Page({
       return;
     }
 
-    // 注释掉与后端交互的部分
-    /*
-    // 使用 wx.request 与后端交互
-    wx.request({
-      url: 'https://your-backend-server.com/auth/login', // 替换为您的后端登录接口地址
-      method: 'POST',
+    wx.showLoading({
+      title: '登录中',
+    });
+
+    // 调用云函数 'loginUser'
+    wx.cloud.callFunction({
+      name: 'loginUser',
       data: {
-        student_id: account, // 根据后端接口要求的参数名
+        student_id: account, // 确保字段名称一致
         password: password
       },
-      header: {
-        'content-type': 'application/json' // 根据后端要求设置请求头
-      },
-      success: (res) => {
-        if (res.statusCode === 200) {
-          // 登录成功，跳转到完善信息页面
+      success: res => {
+        wx.hideLoading();
+        console.log('云函数返回结果：', res);
+        if (res.result.success) {
           wx.showToast({
             title: '登录成功',
             icon: 'success'
           });
 
-          // 存储用户信息（例如 token 或用户 ID）
-          wx.setStorageSync('userInfo', res.data.userInfo);
+          // 存储用户信息和 token
+          wx.setStorageSync('userInfo', res.result.user);
+          wx.setStorageSync('token', res.result.token);
 
-          // 跳转到完善信息页面
+          // 跳转到主界面或其他页面
           wx.reLaunch({
-            url: '/pages/profile/profile' // 替换为您的完善信息页面路径
+            url: '/pages/home/home' // 替换为您的主界面路径
           });
         } else {
-          // 登录失败，显示后端返回的错误信息
           wx.showToast({
-            title: res.data.message || '登录失败',
+            title: res.result.message || '登录失败',
             icon: 'none'
           });
         }
       },
-      fail: (err) => {
+      fail: err => {
+        wx.hideLoading();
         wx.showToast({
           title: '登录失败，请重试',
           icon: 'none'
         });
         console.error('登录请求失败：', err);
       }
-    });
-    */
-
-    // 直接跳转到主界面
-    wx.showToast({
-      title: '登录成功',
-      icon: 'success'
-    });
-
-    // 跳转到主界面或其他页面
-    wx.reLaunch({
-      url: '/pages/profile/profile' // 替换为您的主界面路径
     });
   },
 

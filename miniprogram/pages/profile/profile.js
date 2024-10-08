@@ -1,13 +1,8 @@
-// pages/profile/profile.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     name: '',
     studentId: '',
-    educationLevels: ['大四', '大三', '大二','大一','研三','研二','研一','博士'],
+    educationLevels: ['大四', '大三', '大二', '大一', '研三', '研二', '研一', '博士'],
     selectedEducation: '',
     majors: ['计算机科学与技术', '软件工程', '信息安全', '网络工程'],
     selectedMajor: '',
@@ -16,46 +11,20 @@ Page({
     email: ''
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-    const app = getApp();
-
-    // 检查是否已经获取到 openid
-    if (!app.globalData.userProfile.openid) {
-      // 如果未获取到，调用获取 openid 的方法
-      app.getUserOpenId().then(openid => {
-        console.log('OpenID 已获取：', openid);
-        // 加载用户信息
-        this.loadUserProfile();
-      }).catch(err => {
-        wx.showToast({
-          title: '无法获取用户信息，请重试',
-          icon: 'none',
-        });
+    // 从本地存储中获取用户信息
+    const user = wx.getStorageSync('userInfo'); // 确保存储键名一致
+    if (user) {
+      this.setData({
+        name: user.name || '',
+        studentId: user.student_id || '',
+        selectedEducation: user.education_level || '',
+        selectedMajor: user.major || '',
+        college: user.college || '',
+        phone: user.phone || '',
+        email: user.email || ''
       });
-    } else {
-      // 如果已经获取到 openid，直接加载用户信息
-      this.loadUserProfile();
     }
-  },
-
-  // 从全局数据加载用户信息
-  loadUserProfile() {
-    const app = getApp();
-    const userProfile = app.globalData.userProfile;
-
-    // 更新页面数据
-    this.setData({
-      name: userProfile.name || '',
-      studentId: userProfile.studentId || '',
-      selectedEducation: userProfile.selectedEducation || '',
-      selectedMajor: userProfile.selectedMajor || '',
-      college: userProfile.college || '',
-      phone: userProfile.phone || '',
-      email: userProfile.email || ''
-    });
   },
 
   // 姓名输入
@@ -130,71 +99,64 @@ Page({
       return;
     }
 
-    const app = getApp();
-
-    // 检查是否已经获取到 openid
-    if (!app.globalData.userProfile.openid) {
+    // 获取存储的token
+    const token = wx.getStorageSync('token');
+    if (!token) {
       wx.showToast({
-        title: '正在获取用户信息，请稍后重试',
-        icon: 'none',
-      });
-      // 重新获取 OpenID
-      app.getUserOpenId().then(openid => {
-        console.log('OpenID 已获取：', openid);
-        // 继续提交
-        this.submitUserProfile();
-      }).catch(err => {
-        wx.showToast({
-          title: '无法获取用户信息，请重试',
-          icon: 'none',
-        });
+        title: '请先登录',
+        icon: 'none'
       });
       return;
     }
 
-    // 如果已经有 OpenID，直接提交
-    this.submitUserProfile();
-  },
-
-  // 新增方法，用于提交用户信息
-  submitUserProfile() {
-    const {
-      name,
-      studentId,
-      selectedEducation,
-      selectedMajor,
-      college,
-      phone,
-      email
-    } = this.data;
-
-    const app = getApp();
-
-    // 更新全局用户信息
-    app.globalData.userProfile = {
-      ...app.globalData.userProfile, // 保留已有的 openid 和 avatarUrl
-      name,
-      studentId,
-      selectedEducation,
-      selectedMajor,
-      grade: this.data.grade,
-      college,
-      phone,
-      email
-    };
-
-    // 保存用户信息到本地存储
-    app.saveUserProfile();
-
-    // 显示提交成功的提示
-    wx.showToast({
-      title: '信息已提交',
-      icon: 'success'
+    wx.showLoading({
+      title: '提交中...',
     });
 
-    // 跳转到主页面
-    wx.reLaunch({
-      url: '/pages/home/home'
+    // 调用云函数 'updateUserProfile'
+    wx.cloud.callFunction({
+      name: 'updateUserProfile',
+      data: {
+        token: token,
+        name,
+        student_id: studentId,
+        education_level: selectedEducation,
+        major: selectedMajor,
+        college,
+        phone,
+        email
+      },
+      success: res => {
+        wx.hideLoading();
+        console.log('云函数返回结果：', res);
+        if (res.result.success) {
+          wx.showToast({
+            title: '信息已提交',
+            icon: 'success'
+          });
+
+          // 更新存储中的用户信息
+          wx.setStorageSync('userInfo', res.result.user);
+
+          // 跳转到主页面
+          wx.reLaunch({
+            url: '/pages/home/home' // 替换为您的主页面路径
+          });
+        } else {
+          wx.showToast({
+            title: res.result.message || '提交失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '提交失败，请重试',
+          icon: 'none'
+        });
+        console.error('信息提交请求失败：', err);
+      }
     });
   }
 });

@@ -53,10 +53,19 @@ Page({
   },
 
   loadUserProfile() {
-    const userProfile = app.globalData.userProfile || {};
-
+    const userInfo = wx.getStorageSync('userInfo') || {};
     this.setData({
-      userProfile
+      userProfile: {
+        name: userInfo.name || '',
+        studentId: userInfo.student_id || '',
+        selectedEducation: userInfo.education_level || '',
+        selectedMajor: userInfo.major || '',
+        grade: userInfo.grade || '',
+        college: userInfo.college || '',
+        phone: userInfo.phone || '',
+        email: userInfo.email || '',
+        avatarUrl: userInfo.avatarUrl || ''
+      }
     });
   },
 
@@ -111,17 +120,44 @@ Page({
    * 更新用户资料中的头像 URL
    */
   updateUserProfile(fileID) {
-    // 更新全局数据和本地存储
-    app.updateUserAvatar(fileID);
+    // 调用云函数 'updateUserProfile' 来更新头像
+    wx.cloud.callFunction({
+      name: 'updateUserProfile',
+      data: {
+        token: wx.getStorageSync('token'),
+        avatarUrl: fileID
+      },
+      success: res => {
+        if (res.result.success) {
+          // 更新存储中的用户信息
+          const updatedUser = res.result.user;
+          wx.setStorageSync('userInfo', updatedUser);
 
-    // 更新页面数据
-    this.setData({
-      'userProfile.avatarUrl': fileID
-    });
+          // 更新页面数据
+          this.setData({
+            'userProfile.avatarUrl': updatedUser.avatarUrl
+          });
 
-    wx.hideLoading();
-    wx.showToast({
-      title: '头像更新成功',
+          wx.hideLoading();
+          wx.showToast({
+            title: '头像更新成功',
+          });
+        } else {
+          wx.hideLoading();
+          wx.showToast({
+            title: res.result.message || '头像更新失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '头像更新失败，请重试',
+          icon: 'none'
+        });
+        console.error('更新头像失败：', err);
+      }
     });
   },
 
@@ -131,12 +167,13 @@ Page({
       content: '您确定要登出吗？',
       success: (res) => {
         if (res.confirm) {
-          app.globalData.userProfile = {};
+          app.globalData.userInfo = {};
 
-          wx.removeStorageSync('userProfile');
+          wx.removeStorageSync('userInfo');
+          wx.removeStorageSync('token');
 
           wx.reLaunch({
-            url: '/pages/login/index',
+            url: '/pages/login/login',
           });
         }
       }
