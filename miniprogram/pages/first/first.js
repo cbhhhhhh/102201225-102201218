@@ -1,5 +1,9 @@
 // pages/first/first.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
     activeCategory: 'all', // 当前选择的分类
     searchKeyword: '', // 搜索关键字
@@ -10,14 +14,17 @@ Page({
     filterVisible: false, // 控制筛选界面的显示与隐藏
     filterOptions: {
       category: '', // 项目类别
-      major: '', // 专业
+      major: '', // 专业（如果项目包含此字段）
       keyword: '', // 关键词
-      experienceRequired: '' // 是否需要相关经验
+      experienceRequired: '' // 是否需要相关经验（如果项目包含此字段）
     },
     categories: ['社会实践', '创新创业', '科研比赛'], // 项目类别选项
     experienceOptions: ['是', '否'], // 经验要求选项
   },
 
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad() {
     // 获取应用实例
     const app = getApp();
@@ -28,6 +35,9 @@ Page({
     });
   },
 
+  /**
+   * 生命周期函数--监听页面显示
+   */
   onShow() {
     // 当页面显示时，更新项目列表
     const app = getApp();
@@ -48,13 +58,15 @@ Page({
     // 根据选择的类别和搜索关键字筛选项目
     this.filterProjects();
   },
+  
   // 点击项目，跳转到详情页
   onProjectTap(e) {
-    const projectId = e.currentTarget.dataset.projectId;
+    const projectId = e.currentTarget.dataset.projectId; // 确保传递的是 _id
     wx.navigateTo({
       url: `/pages/ProjectDetail/ProjectDetail?id=${projectId}`,
     });
   },
+  
   // 搜索输入事件
   onSearchInput(e) {
     const keyword = e.detail.value;
@@ -90,7 +102,7 @@ Page({
       filteredProjects = filteredProjects.filter(item => item.category === filterOptions.category);
     }
 
-    // 筛选专业
+    // 筛选专业（如果项目包含此字段）
     if (filterOptions.major) {
       filteredProjects = filteredProjects.filter(item => item.major && item.major.includes(filterOptions.major));
     }
@@ -104,13 +116,14 @@ Page({
       );
     }
 
-    // 筛选是否需要相关经验
+    // 筛选是否需要相关经验（如果项目包含此字段）
     if (filterOptions.experienceRequired) {
       filteredProjects = filteredProjects.filter(item => item.experienceRequired === filterOptions.experienceRequired);
     }
+
     // 更新项目列表前，对项目按照创建时间降序排序
     filteredProjects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
+
     // 更新项目列表
     this.setData({
       projects: filteredProjects
@@ -169,4 +182,5 @@ Page({
     });
     this.filterProjects();
   }
+
 });

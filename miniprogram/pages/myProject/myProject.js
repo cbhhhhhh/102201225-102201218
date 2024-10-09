@@ -12,29 +12,27 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    // 获取全局数据中的我的项目，并格式化日期
-    const app = getApp();
-    const formattedProjects = app.globalData.myProjects.map(project => ({
-      ...project,
-      formattedCreatedAt: this.formatDate(project.createdAt)
-    }));
-    this.setData({
-      myProjects: formattedProjects
-    });
+    this.loadMyProjects();
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    // 更新我的项目列表，并格式化日期
+    this.loadMyProjects();
+  },
+
+  /**
+   * 加载当前用户的项目
+   */
+  loadMyProjects() {
     const app = getApp();
-    const formattedProjects = app.globalData.myProjects.map(project => ({
+    const myProjects = app.globalData.myProjects.map(project => ({
       ...project,
       formattedCreatedAt: this.formatDate(project.createdAt)
     }));
     this.setData({
-      myProjects: formattedProjects
+      myProjects: myProjects
     });
   },
 

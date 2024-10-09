@@ -141,7 +141,7 @@ Page({
   },
 
   // 点击创建按钮
-  async onSubmit() {
+  onSubmit() {
     // 表单验证
     if (!this.data.projectName) {
       wx.showToast({
@@ -179,40 +179,70 @@ Page({
       return;
     }
 
+    // 获取应用实例
+    const app = getApp();
+    const openid = app.globalData.userProfile.openid;
+
+    if (!openid) {
+      wx.showToast({
+        title: '用户未登录',
+        icon: 'none',
+      });
+      return;
+    }
+
     // 提交表单数据
     const projectData = {
-      id: Date.now(), // 简单生成唯一ID
       name: this.data.projectName,
       category: this.data.selectedProjectType,
       tags: this.data.keywords, // 直接使用数组
       talentNumber: parseInt(this.data.talentNumber, 10), // 确保为数字
       description: this.data.projectDescription,
       imageUrl: this.data.imageUrl, // 使用上传后的图片URL
-      createdAt: new Date().toISOString() // 添加创建时间
+      createdAt: new Date().toISOString(), // 添加创建时间
+      openid: openid // 关联项目创建者
     };
 
-    // 获取应用实例
-    const app = getApp();
-    // 将新项目添加到全局数据的项目列表中
-    app.globalData.allProjects.unshift(projectData);
-    // 将新项目添加到我的项目列表中
-    app.globalData.myProjects.unshift(projectData);
+    const db = wx.cloud.database();
+    const projectsCollection = db.collection('projects');
 
-    // 保存项目到本地存储
-    app.saveProjects();
-
-    wx.showToast({
-      title: '项目创建成功',
-      icon: 'success',
-      duration: 2000,
+    // 添加到云数据库
+    wx.showLoading({
+      title: '创建中...',
     });
-
-    // 提交成功后，跳转到项目列表页面
-    setTimeout(() => {
-      wx.switchTab({
-        url: '/pages/first/first',
+    projectsCollection.add({
+      data: projectData
+    }).then(res => {
+      wx.hideLoading();
+      wx.showToast({
+        title: '项目创建成功',
+        icon: 'success',
+        duration: 2000,
       });
-    }, 2000);
+
+      // 添加到全局数据
+      const newProject = {
+        ...projectData,
+        _id: res._id // 使用云数据库的 _id 作为项目 ID
+      };
+      app.globalData.myProjects.unshift(newProject);
+      app.globalData.allProjects.unshift(newProject);
+
+      // 跳转到项目列表页面
+      setTimeout(() => {
+        wx.switchTab({
+          url: '/pages/first/first',
+        });
+      }, 2000);
+    }).catch(err => {
+      wx.hideLoading();
+      wx.showToast({
+        title: '创建项目失败',
+        icon: 'none',
+        duration: 2000,
+      });
+      console.error('创建项目失败：', err);
+    });
   },
 
   /**
@@ -247,7 +277,7 @@ Page({
                 icon: 'success',
                 duration: 2000,
               });
-              //设置图片URL到数据中
+              // 设置图片URL到数据中
               that.setData({
                 imageUrl: resUpload.fileID
               });

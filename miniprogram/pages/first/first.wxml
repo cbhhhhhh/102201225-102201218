@@ -35,8 +35,8 @@
   <!-- 滑动内容区域 -->
   <scroll-view scroll-y="true" class="project-list">
     <!-- 每个项目栏 -->
-    <block wx:for="{{projects}}" wx:key="id">
-      <view class="project-item" data-project-id="{{item.id}}" bindtap="onProjectTap">
+    <block wx:for="{{projects}}" wx:key="_id">
+      <view class="project-item" data-project-id="{{item._id}}" bindtap="onProjectTap">
         <image class="project-image" src="{{item.imageUrl}}" mode="aspectFill" />
         <view class="project-info">
           <view class="project-header">

@@ -5,10 +5,10 @@ Page({
     formattedCreatedAt: '',
   },
   onLoad(options) {
-    const projectId = options.id;
+    const projectId = options.id; // 这里的 id 实际上是 _id
     const app = getApp();
     const allProjects = app.globalData.allProjects;
-    const project = allProjects.find((p) => p.id == projectId);
+    const project = allProjects.find((p) => p._id === projectId); // 使用 _id 进行查找
     if (project) {
       // 格式化创建时间
       const createdAt = new Date(project.createdAt);

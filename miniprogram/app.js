@@ -4,9 +4,10 @@ App({
    * 全局数据
    */
   globalData: {
-    allProjects: [
+    // 预定义项目
+    predefinedProjects: [
       {
-        id: 1,
+        _id: 'predefined1', // 添加唯一的 _id
         name: '乡村支教实践活动',
         description: '深入乡村，为留守儿童提供教育支持。',
         category: '社会实践',
@@ -16,7 +17,7 @@ App({
         createdAt: '2024-04-27T14:30:00Z'
       },
       {
-        id: 2,
+        _id: 'predefined2',
         name: '环保公益宣传',
         description: '组织环保活动，提高公众环保意识。',
         category: '社会实践',
@@ -27,7 +28,7 @@ App({
       },
       // 创新创业项目
       {
-        id: 3,
+        _id: 'predefined3',
         name: '校园二手交易平台',
         description: '搭建供师生使用的二手物品交易平台。',
         category: '创新创业',
@@ -37,7 +38,7 @@ App({
         createdAt: '2024-05-01T10:00:00Z'
       },
       {
-        id: 4,
+        _id: 'predefined4',
         name: '智能家居控制系统',
         description: '开发一套基于物联网的智能家居系统。',
         category: '创新创业',
@@ -48,7 +49,7 @@ App({
       },
       // 科研比赛项目
       {
-        id: 5,
+        _id: 'predefined5',
         name: '数学建模国赛集训',
         description: '备战全国大学生数学建模竞赛，提升建模能力。',
         category: '科研比赛',
@@ -58,7 +59,7 @@ App({
         createdAt: '2024-05-03T08:45:00Z'
       },
       {
-        id: 6,
+        _id: 'predefined6',
         name: '机器人设计大赛',
         description: '参加机器人设计大赛，培养实践能力。',
         category: '科研比赛',
@@ -69,7 +70,8 @@ App({
       }
       // 可以根据需要继续添加项目
     ],
-    myProjects: [], // 用于存储用户创建的项目
+    allProjects: [], // 将在加载后初始化为预定义项目 + 用户创建项目
+    myProjects: [], // 用于存储当前用户创建的项目
     userProfile: {
       name: '',
       studentId: '',
@@ -111,8 +113,8 @@ App({
               userInfo.openid = openid;
               wx.setStorageSync('userInfo', userInfo);
 
-              // 加载本地数据
-              this.loadLocalData();
+              // 加载项目数据
+              this.loadProjects();
             } else {
               console.warn('未能获取到 OpenID');
             }
@@ -152,22 +154,35 @@ App({
   },
 
   /**
-   * 从本地存储加载数据
+   * 从云数据库加载用户创建的项目，并初始化 allProjects
    */
-  loadLocalData: function () {
-    const userInfo = wx.getStorageSync('userInfo') || {};
-    const openid = userInfo.openid || '';
+  loadProjects: function () {
+    const openid = this.globalData.userProfile.openid;
 
     if (openid) {
-      this.globalData.userProfile.openid = openid;
+      const db = wx.cloud.database();
+      const projectsCollection = db.collection('projects');
 
-      // 加载 myProjects（用户创建的项目）
-      const myProjects = wx.getStorageSync(`myProjects_${openid}`);
-      if (myProjects && Array.isArray(myProjects)) {
-        this.globalData.myProjects = myProjects;
-        // 将用户创建的项目合并到 allProjects 中，放在初始项目之前
-        this.globalData.allProjects = myProjects.concat(this.globalData.allProjects);
-      }
+      // 获取当前用户创建的项目
+      projectsCollection.where({
+        openid: openid
+      }).orderBy('createdAt', 'desc').get({
+        success: res => {
+          if (res.data && Array.isArray(res.data)) {
+            this.globalData.myProjects = res.data;
+            // 合并用户创建的项目和预定义的项目
+            this.globalData.allProjects = this.globalData.myProjects.concat(this.globalData.predefinedProjects);
+            console.log('项目数据加载完成:', this.globalData.allProjects);
+          } else {
+            console.warn('未找到用户创建的项目');
+            this.globalData.allProjects = this.globalData.predefinedProjects;
+          }
+        },
+        fail: err => {
+          console.error('获取用户项目失败：', err);
+          this.globalData.allProjects = this.globalData.predefinedProjects;
+        }
+      });
 
       // 加载 userProfile
       const storedUserProfile = wx.getStorageSync(`userProfile_${openid}`);
@@ -181,6 +196,7 @@ App({
       }
     } else {
       console.warn('用户尚未登录或 OpenID 尚未获取，无法加载用户数据');
+      this.globalData.allProjects = this.globalData.predefinedProjects;
     }
   },
 
@@ -203,18 +219,6 @@ App({
       ...newProfile
     };
     this.saveUserProfile();
-  },
-
-  /**
-   * 保存用户创建的项目到本地存储
-   */
-  saveProjects: function () {
-    const openid = this.globalData.userProfile.openid;
-    if (openid) {
-      wx.setStorageSync(`myProjects_${openid}`, this.globalData.myProjects);
-    } else {
-      console.warn('OpenID 尚未获取，无法保存用户项目');
-    }
   },
 
   /**
