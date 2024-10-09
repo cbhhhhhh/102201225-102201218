@@ -4,6 +4,7 @@ Page({
     project: null,
     formattedCreatedAt: '',
   },
+  
   onLoad(options) {
     const projectId = options.id; // 这里的 id 实际上是 _id
     const app = getApp();
@@ -29,7 +30,10 @@ Page({
       }, 2000);
     }
   },
-  // 格式化日期
+  
+  /**
+   * 格式化日期
+   */
   formatDate(date) {
     const year = date.getFullYear();
     const month = this.padZero(date.getMonth() + 1);
@@ -38,18 +42,27 @@ Page({
     const minutes = this.padZero(date.getMinutes());
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   },
-  // 补零函数
+  
+  /**
+   * 补零函数
+   */
   padZero(num) {
     return num < 10 ? '0' + num : num;
   },
-  // 点击关键词
+  
+  /**
+   * 点击关键词，跳转到搜索结果页
+   */
   onKeywordTap(e) {
     const keyword = e.currentTarget.dataset.keyword;
     wx.navigateTo({
       url: `/pages/SearchResult/SearchResult?keyword=${keyword}`,
     });
   },
-  // 点击报名按钮
+  
+  /**
+   * 点击报名按钮
+   */
   onSignup() {
     wx.showToast({
       title: '报名成功',

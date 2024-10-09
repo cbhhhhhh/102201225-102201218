@@ -245,60 +245,57 @@ Page({
     });
   },
 
-  /**
-   * 选择并上传图片
-   */
-  onChooseImage() {
-    const that = this;
-    wx.chooseImage({
-      count: 1, // 默认选择1张图片
-      sizeType: ['original', 'compressed'], // 可以选择原图或压缩图
-      sourceType: ['album', 'camera'], // 可以选择相册或拍照
-      success(res) {
-        const tempFilePaths = res.tempFilePaths;
-        if (tempFilePaths.length > 0) {
-          // 设置预览图片路径
-          that.setData({
-            previewImageUrl: tempFilePaths[0],
-          });
+// pages/CreateProject/CreateProject.js
+onChooseImage() {
+  const that = this;
+  wx.chooseImage({
+    count: 1,
+    sizeType: ['original', 'compressed'],
+    sourceType: ['album', 'camera'],
+    success(res) {
+      const tempFilePaths = res.tempFilePaths;
+      if (tempFilePaths.length > 0) {
+        that.setData({
+          previewImageUrl: tempFilePaths[0],
+        });
 
-          // 上传图片到云存储
-          wx.showLoading({
-            title: '上传中...',
-          });
-          const cloudPath = 'projectImages/' + Date.now() + '-' + Math.floor(Math.random() * 1000) + tempFilePaths[0].match(/\.[^.]+?$/)[0];
-          wx.cloud.uploadFile({
-            cloudPath,
-            filePath: tempFilePaths[0],
-            success: resUpload => {
-              wx.hideLoading();
-              wx.showToast({
-                title: '上传成功',
-                icon: 'success',
-                duration: 2000,
-              });
-              // 设置图片URL到数据中
-              that.setData({
-                imageUrl: resUpload.fileID
-              });
-            },
-            fail: err => {
-              wx.hideLoading();
-              wx.showToast({
-                title: '上传失败',
-                icon: 'none',
-                duration: 2000,
-              });
-              console.error('上传失败', err);
-            }
-          });
-        }
-      },
-      fail(err) {
-        console.error('选择图片失败', err);
+        // 上传图片到云存储
+        wx.showLoading({
+          title: '上传中...',
+        });
+        const cloudPath = 'projectImages/' + Date.now() + '-' + Math.floor(Math.random() * 1000) + tempFilePaths[0].match(/\.[^.]+?$/)[0];
+        wx.cloud.uploadFile({
+          cloudPath,
+          filePath: tempFilePaths[0],
+          success: resUpload => {
+            wx.hideLoading();
+            wx.showToast({
+              title: '上传成功',
+              icon: 'success',
+              duration: 2000,
+            });
+            // 设置图片URL到数据中
+            that.setData({
+              imageUrl: resUpload.fileID
+            });
+          },
+          fail: err => {
+            wx.hideLoading();
+            wx.showToast({
+              title: '上传失败',
+              icon: 'none',
+              duration: 2000,
+            });
+            console.error('上传失败', err);
+          }
+        });
       }
-    });
-  },
+    },
+    fail(err) {
+      console.error('选择图片失败', err);
+    }
+  });
+},
 
   /**
    * 生命周期函数--监听页面初次渲染完成

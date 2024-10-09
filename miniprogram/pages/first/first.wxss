@@ -57,7 +57,7 @@
   width: 100vw;
   background-color: white;
   position: fixed;
-  top: 80rpx;
+  top: 80rpx; /* header height (60rpx) + padding (20rpx) */
   left: 0;
   z-index: 999;
 }
@@ -79,7 +79,8 @@
 .project-list {
   flex-grow: 1;
   background-color: #f5f5f5;
-  margin-top: 190rpx; /* 根据 header 和 category-bar 的高度调整 */
+  margin-top: 190rpx; /* header (60rpx) + category-bar (80rpx) + padding */
+  padding-bottom: 20rpx; /* optional: space at the bottom */
 }
 
 /* 项目栏样式 */
@@ -102,6 +103,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  max-width: calc(100% - 200rpx); /* 图片宽度(180rpx) + margin-right(20rpx) */
 }
 
 .project-header {
@@ -113,6 +115,10 @@
 .project-name {
   font-size: 32rpx;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
 }
 
 .project-category {
@@ -124,6 +130,15 @@
   font-size: 26rpx;
   color: #666;
   margin: 10rpx 0;
+  
+  /* 限制行数并添加省略号 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 最大显示2行 */
+  overflow: hidden;
+  
+  /* 可选：调整行高 */
+  line-height: 36rpx; /* 根据需要调整 */
 }
 
 .tag-container {
@@ -147,6 +162,7 @@
   background-color: #e0e0e0;
   margin: 0 20rpx;
 }
+
 /* 筛选界面 */
 .filter-modal {
   position: fixed;
@@ -173,7 +189,6 @@
 
 .filter-title {
   font-size: 28rpx;
-  
   font-weight: bold;
   margin-bottom: 10rpx;
 }
