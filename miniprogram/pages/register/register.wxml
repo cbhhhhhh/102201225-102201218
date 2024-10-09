@@ -1,3 +1,4 @@
+<!-- pages/register/register.wxml -->
 <view class="container">
   <!-- Logo -->
   <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
@@ -7,13 +8,14 @@
 
   <!-- 输入框区域 -->
   <view class="input-container">
-    <!-- 账号输入框 -->
+    <!-- 学号输入框 -->
     <input
       class="input account-input"
-      placeholder="请输入账号"
-      bindinput="onAccountInput"
+      placeholder="请输入学号"
+      bindinput="onStudentIdInput"
+      value="{{studentId}}"
     />
-    
+
     <!-- 密码输入框 -->
     <view class="password-wrapper">
       <input
@@ -21,6 +23,7 @@
         placeholder="请输入密码"
         password="{{!showPassword}}"
         bindinput="onPasswordInput"
+        value="{{password}}"
       />
       <!-- 密码切换图标按钮 -->
       <view
@@ -39,6 +42,7 @@
         placeholder="请确认密码"
         password="{{!showConfirmPassword}}"
         bindinput="onConfirmPasswordInput"
+        value="{{confirmPassword}}"
       />
       <!-- 确认密码切换图标按钮 -->
       <view
@@ -49,7 +53,6 @@
         <image src="{{showConfirmPassword ? '/images/eye-open.png' : '/images/eye-closed.png'}}" class="toggle-icon" />
       </view>
     </view>
-
   </view>
 
   <!-- 按钮区域 -->

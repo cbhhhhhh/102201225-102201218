@@ -1,3 +1,4 @@
+// pages/login/index.js
 Page({
   data: {
     account: '',
@@ -68,9 +69,8 @@ Page({
             icon: 'success'
           });
 
-          // 存储用户信息和 token
+          // 存储用户信息
           wx.setStorageSync('userInfo', res.result.user);
-          wx.setStorageSync('token', res.result.token);
 
           // 跳转到主界面或其他页面
           wx.reLaunch({

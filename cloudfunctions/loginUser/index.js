@@ -1,22 +1,20 @@
 // cloudfunctions/loginUser/index.js
 const cloud = require('wx-server-sdk');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
-cloud.init();
+cloud.init({
+  env: 'cbh102201225-8gcwmhi730f02e6f', // 替换为您的云环境ID
+  traceUser: true,
+});
 const db = cloud.database();
 const usersCollection = db.collection('users');
-
-const SECRET_KEY = 'your-secret-key'; // 请替换为您的密钥，确保安全
 
 exports.main = async (event, context) => {
   const { student_id, password } = event;
 
   try {
-    console.log('usersCollection 是否已定义：', typeof usersCollection);
-
+    // 根据 student_id 查找用户
     const userResult = await usersCollection.where({ student_id }).get();
-    console.log('用户查询结果：', userResult);
 
     if (userResult.data.length === 0) {
       return {
@@ -26,12 +24,9 @@ exports.main = async (event, context) => {
     }
 
     const user = userResult.data[0];
-    console.log('查询到的用户：', user);
 
+    // 比较密码
     const passwordMatch = bcrypt.compareSync(password, user.password);
-    console.log('输入的密码：', password);
-    console.log('数据库中的哈希密码：', user.password);
-    console.log('密码匹配结果：', passwordMatch);
 
     if (!passwordMatch) {
       return {
@@ -40,27 +35,33 @@ exports.main = async (event, context) => {
       };
     }
 
-    // 生成 token
-    const token = jwt.sign(
-      { openId: user.openid, student_id: user.student_id },
-      SECRET_KEY,
-      { expiresIn: '1h' } // token 有效期为 1 小时
-    );
-
+    // 从用户数据中排除密码
     const { password: pwd, ...userData } = user;
+
+    // 确保 userData 中包含 openid
+    if (!userData.openid) {
+      const wxContext = cloud.getWXContext();
+      userData.openid = wxContext.OPENID;
+      // 更新数据库中的 openid
+      await usersCollection.doc(user._id).update({
+        data: {
+          openid: wxContext.OPENID
+        }
+      });
+    }
 
     return {
       success: true,
       message: '登录成功',
-      user: userData,
-      token: token // 返回 token
+      user: userData
+      // 不再返回 token
     };
   } catch (err) {
     console.error('登录失败：', err);
     return {
       success: false,
       message: '登录失败',
-      error: err
+      error: err.toString()
     };
   }
 };

@@ -1,37 +1,12 @@
+// pages/register/register.js
 Page({
   data: {
-    name: '',
     studentId: '',
-    educationLevels: ['大四', '大三', '大二', '大一', '研三', '研二', '研一', '博士'],
-    selectedEducation: '',
-    majors: ['计算机科学与技术', '软件工程', '信息安全', '网络工程'],
-    selectedMajor: '',
-    college: '',
-    phone: '',
-    email: ''
-  },
-
-  onLoad(options) {
-    // 从本地存储中获取用户信息
-    const user = wx.getStorageSync('userInfo'); // 确保存储键名一致
-    if (user) {
-      this.setData({
-        name: user.name || '',
-        studentId: user.student_id || '',
-        selectedEducation: user.education_level || '',
-        selectedMajor: user.major || '',
-        college: user.college || '',
-        phone: user.phone || '',
-        email: user.email || ''
-      });
-    }
-  },
-
-  // 姓名输入
-  onNameInput(e) {
-    this.setData({
-      name: e.detail.value
-    });
+    password: '',
+    confirmPassword: '',
+    // 其他注册相关的数据字段
+    showPassword: false,
+    showConfirmPassword: false
   },
 
   // 学号输入
@@ -41,57 +16,57 @@ Page({
     });
   },
 
-  // 学历选择
-  onEducationChange(e) {
-    const index = e.detail.value;
+  // 密码输入
+  onPasswordInput(e) {
     this.setData({
-      selectedEducation: this.data.educationLevels[index]
+      password: e.detail.value
     });
   },
 
-  // 专业选择
-  onMajorChange(e) {
-    const index = e.detail.value;
+  // 确认密码输入
+  onConfirmPasswordInput(e) {
     this.setData({
-      selectedMajor: this.data.majors[index]
+      confirmPassword: e.detail.value
     });
   },
 
-  // 学院输入
-  onCollegeInput(e) {
+  // 切换密码显示
+  togglePassword() {
     this.setData({
-      college: e.detail.value
+      showPassword: !this.data.showPassword
     });
   },
 
-  // 电话输入
-  onPhoneInput(e) {
+  // 切换确认密码显示
+  toggleConfirmPassword() {
     this.setData({
-      phone: e.detail.value
+      showConfirmPassword: !this.data.showConfirmPassword
     });
   },
 
-  // 邮箱输入
-  onEmailInput(e) {
+  // 取消按钮点击事件
+  onCancel() {
+    // 重置表单
     this.setData({
-      email: e.detail.value
+      studentId: '',
+      password: '',
+      confirmPassword: '',
+      showPassword: false,
+      showConfirmPassword: false
+    });
+
+    // 或者返回上一页
+    wx.navigateBack({
+      delta: 1
     });
   },
 
-  // 完成按钮点击事件
-  onSubmit() {
-    const {
-      name,
-      studentId,
-      selectedEducation,
-      selectedMajor,
-      college,
-      phone,
-      email
-    } = this.data;
+  // 注册按钮点击事件
+  onRegister() {
+    const { studentId, password, confirmPassword } = this.data;
 
     // 简单表单验证
-    if (!name || !studentId || !selectedEducation || !selectedMajor || !college || !phone || !email) {
+    if (!studentId || !password || !confirmPassword) {
       wx.showToast({
         title: '请完整填写信息',
         icon: 'none'
@@ -99,63 +74,44 @@ Page({
       return;
     }
 
+    if (password !== confirmPassword) {
+      wx.showToast({
+        title: '两次密码输入不一致',
+        icon: 'none'
+      });
+      return;
+    }
+
     wx.showLoading({
-      title: '提交中...',
+      title: '注册中...',
     });
 
-    // 获取存储的用户信息
-    const userInfo = wx.getStorageSync('userInfo');
-    if (!userInfo) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      });
-      return;
-    }
-
-    // 获取用户的 openid 或其他标识
-    const openId = userInfo.openid; // 确保 userInfo 中包含 openid
-
-    if (!openId) {
-      wx.showToast({
-        title: '无法获取用户信息',
-        icon: 'none'
-      });
-      return;
-    }
-
-    // 调用云函数 'updateUserProfile'（需要创建）
+    // 调用云函数 'registerUser'
     wx.cloud.callFunction({
-      name: 'updateUserProfile',
+      name: 'registerUser',
       data: {
-        openId: openId, // 使用用户的 openid 作为标识
-        name,
         student_id: studentId,
-        education_level: selectedEducation,
-        major: selectedMajor,
-        college,
-        phone,
-        email
+        password: password
       },
       success: res => {
         wx.hideLoading();
         console.log('云函数返回结果：', res);
         if (res.result.success) {
           wx.showToast({
-            title: '信息已提交',
+            title: '注册成功',
             icon: 'success'
           });
 
-          // 更新存储中的用户信息
-          wx.setStorageSync('userInfo', res.result.user);
+          // **移除存储用户信息的代码**
+          // wx.setStorageSync('userInfo', res.result.user);
 
-          // 跳转到主页面
-          wx.reLaunch({
-            url: '/pages/home/home' // 替换为您的主页面路径
+          // **跳转到登录页面**
+          wx.navigateTo({
+            url: '/pages/login/index' // 替换为您的登录页面路径
           });
         } else {
           wx.showToast({
-            title: res.result.message || '提交失败',
+            title: res.result.message || '注册失败',
             icon: 'none'
           });
         }
@@ -163,10 +119,10 @@ Page({
       fail: err => {
         wx.hideLoading();
         wx.showToast({
-          title: '提交失败，请重试',
+          title: '注册失败，请重试',
           icon: 'none'
         });
-        console.error('信息提交请求失败：', err);
+        console.error('注册请求失败：', err);
       }
     });
   }

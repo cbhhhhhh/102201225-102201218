@@ -1,3 +1,4 @@
+// pages/profile/profile.js
 Page({
   data: {
     name: '',
@@ -99,9 +100,14 @@ Page({
       return;
     }
 
-    // 获取存储的token
-    const token = wx.getStorageSync('token');
-    if (!token) {
+    wx.showLoading({
+      title: '提交中...',
+    });
+
+    // 获取存储的用户信息
+    const user = wx.getStorageSync('userInfo');
+    if (!user) {
+      wx.hideLoading();
       wx.showToast({
         title: '请先登录',
         icon: 'none'
@@ -109,15 +115,23 @@ Page({
       return;
     }
 
-    wx.showLoading({
-      title: '提交中...',
-    });
+    // 获取用户的 openid 或其他标识
+    const openId = user.openid; // 确保 userInfo 中包含 openid
+
+    if (!openId) {
+      wx.hideLoading();
+      wx.showToast({
+        title: '无法获取用户信息',
+        icon: 'none'
+      });
+      return;
+    }
 
     // 调用云函数 'updateUserProfile'
     wx.cloud.callFunction({
       name: 'updateUserProfile',
       data: {
-        token: token,
+        // 不传递 openId，因为云函数会自动获取
         name,
         student_id: studentId,
         education_level: selectedEducation,

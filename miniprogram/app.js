@@ -79,7 +79,7 @@ App({
       phone: '',
       email: '',
       avatarUrl: '', // 初始化头像 URL
-      openid: '' // 新增：用于存储用户的 OpenID
+      openid: '' // 用于存储用户的 OpenID
     } // 用于存储用户个人信息
   },
 
@@ -97,31 +97,54 @@ App({
       });
     }
 
-    // 调用获取用户 OpenID 的方法，并等待完成
-    this.getUserOpenId().then(openid => {
-      console.log('获取到 OpenID：', openid);
-      // 可以在这里执行需要依赖 OpenID 的初始化操作
-    }).catch(err => {
-      console.error('获取 OpenID 失败：', err);
+    // 调用登录接口
+    wx.login({
+      success: res => {
+        if (res.code) {
+          // 通过云函数获取 OpenID
+          this.getOpenId().then(openid => {
+            if (openid) {
+              console.log('获取到的 OpenID：', openid);
+              // 将 OpenID 存储到全局数据和本地存储
+              this.globalData.userProfile.openid = openid;
+              let userInfo = wx.getStorageSync('userInfo') || {};
+              userInfo.openid = openid;
+              wx.setStorageSync('userInfo', userInfo);
+
+              // 加载本地数据
+              this.loadLocalData();
+            } else {
+              console.warn('未能获取到 OpenID');
+            }
+          }).catch(err => {
+            console.error('获取 OpenID 失败：', err);
+          });
+        } else {
+          console.error('登录失败！' + res.errMsg);
+        }
+      },
+      fail: err => {
+        console.error('wx.login 接口调用失败：', err);
+      }
     });
   },
 
-  getUserOpenId: function () {
-    const app = this;
+  /**
+   * 调用云函数获取 OpenID
+   */
+  getOpenId: function () {
     return new Promise((resolve, reject) => {
       wx.cloud.callFunction({
-        name: 'login', // 云函数名称
+        name: 'getOpenId',
         data: {},
         success: res => {
-          console.log('云函数 [login] 调用成功：', res);
-          app.globalData.userProfile.openid = res.result.openid;
-
-          // 获取到 OpenID 后，加载用户数据
-          app.loadData();
-          resolve(res.result.openid);
+          if (res.result && res.result.openid) {
+            resolve(res.result.openid);
+          } else {
+            reject('未获取到 OpenID');
+          }
         },
         fail: err => {
-          console.error('云函数 [login] 调用失败：', err);
           reject(err);
         }
       });
@@ -131,32 +154,55 @@ App({
   /**
    * 从本地存储加载数据
    */
-  loadData: function () {
-    const app = this;
-    const openid = app.globalData.userProfile.openid;
+  loadLocalData: function () {
+    const userInfo = wx.getStorageSync('userInfo') || {};
+    const openid = userInfo.openid || '';
 
     if (openid) {
+      this.globalData.userProfile.openid = openid;
+
       // 加载 myProjects（用户创建的项目）
       const myProjects = wx.getStorageSync(`myProjects_${openid}`);
       if (myProjects && Array.isArray(myProjects)) {
-        app.globalData.myProjects = myProjects;
+        this.globalData.myProjects = myProjects;
         // 将用户创建的项目合并到 allProjects 中，放在初始项目之前
-        app.globalData.allProjects = myProjects.concat(app.globalData.allProjects);
+        this.globalData.allProjects = myProjects.concat(this.globalData.allProjects);
       }
 
       // 加载 userProfile
       const storedUserProfile = wx.getStorageSync(`userProfile_${openid}`);
       if (storedUserProfile && typeof storedUserProfile === 'object') {
         // 确保 avatarUrl 存在
-        app.globalData.userProfile = {
+        this.globalData.userProfile = {
           avatarUrl: '',
           ...storedUserProfile,
           openid: openid // 保持 OpenID 一致
         };
       }
     } else {
-      console.warn('OpenID 尚未获取，无法加载用户数据');
+      console.warn('用户尚未登录或 OpenID 尚未获取，无法加载用户数据');
     }
+  },
+
+  /**
+   * 更新用户头像
+   * @param {string} newAvatarUrl - 新的头像 URL
+   */
+  updateUserAvatar: function (newAvatarUrl) {
+    this.globalData.userProfile.avatarUrl = newAvatarUrl;
+    this.saveUserProfile();
+  },
+
+  /**
+   * 更新用户信息
+   * @param {object} newProfile - 新的用户信息
+   */
+  updateUserProfile: function (newProfile) {
+    this.globalData.userProfile = {
+      ...this.globalData.userProfile,
+      ...newProfile
+    };
+    this.saveUserProfile();
   },
 
   /**
@@ -181,26 +227,5 @@ App({
     } else {
       console.warn('OpenID 尚未获取，无法保存用户信息');
     }
-  },
-
-  /**
-   * 更新用户头像
-   * @param {string} newAvatarUrl - 新的头像 URL
-   */
-  updateUserAvatar: function (newAvatarUrl) {
-    this.globalData.userProfile.avatarUrl = newAvatarUrl;
-    this.saveUserProfile();
-  },
-
-  /**
-   * 更新用户信息
-   * @param {object} newProfile - 新的用户信息
-   */
-  updateUserProfile: function (newProfile) {
-    this.globalData.userProfile = {
-      ...this.globalData.userProfile,
-      ...newProfile
-    };
-    this.saveUserProfile();
   }
 });

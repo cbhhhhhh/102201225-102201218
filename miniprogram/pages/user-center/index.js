@@ -1,10 +1,8 @@
 // pages/me/index.js
-const app = getApp(); // 在顶部获取全局应用实例
+const app = getApp(); // 获取全局应用实例
 
 Page({
   data: {
-    openId: '',
-    showUploadTip: false,
     userProfile: {
       name: '',
       studentId: '',
@@ -19,37 +17,11 @@ Page({
   },
 
   onLoad(options) {
-    this.getOpenId();
     this.loadUserProfile();
   },
 
   onShow() {
     this.loadUserProfile();
-  },
-
-  getOpenId() {
-    wx.showLoading({
-      title: '加载中...',
-    });
-    wx.cloud
-      .callFunction({
-        name: 'quickstartFunctions',
-        data: {
-          type: 'getOpenId',
-        },
-      })
-      .then((resp) => {
-        this.setData({
-          openId: resp.result.openid,
-        });
-        wx.hideLoading();
-      })
-      .catch((e) => {
-        this.setData({
-          showUploadTip: true,
-        });
-        wx.hideLoading();
-      });
   },
 
   loadUserProfile() {
@@ -95,8 +67,21 @@ Page({
       title: '上传中...',
     });
 
+    // 获取用户的 openid
+    const userInfo = wx.getStorageSync('userInfo') || {};
+    const openid = userInfo.openid || '';
+
+    if (!openid) {
+      wx.hideLoading();
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none'
+      });
+      return;
+    }
+
     // 生成一个唯一的文件名
-    const cloudPath = `avatar/${this.data.openId}_${Date.now()}${filePath.match(/\.[^.]+?$/)[0]}`;
+    const cloudPath = `avatar/${openid}_${Date.now()}${filePath.match(/\.[^.]+?$/)[0]}`;
 
     wx.cloud.uploadFile({
       cloudPath,
@@ -120,12 +105,11 @@ Page({
    * 更新用户资料中的头像 URL
    */
   updateUserProfile(fileID) {
-    // 调用云函数 'updateUserProfile' 来更新头像
+    // 调用云函数 'updateUserProfile'
     wx.cloud.callFunction({
       name: 'updateUserProfile',
       data: {
-        token: wx.getStorageSync('token'),
-        avatarUrl: fileID
+        avatarUrl: fileID // 只传递需要更新的头像 URL
       },
       success: res => {
         if (res.result.success) {
@@ -167,13 +151,22 @@ Page({
       content: '您确定要登出吗？',
       success: (res) => {
         if (res.confirm) {
-          app.globalData.userInfo = {};
+          app.globalData.userProfile = {
+            name: '',
+            studentId: '',
+            selectedEducation: '',
+            selectedMajor: '',
+            college: '',
+            phone: '',
+            email: '',
+            avatarUrl: '',
+            openid: ''
+          };
 
           wx.removeStorageSync('userInfo');
-          wx.removeStorageSync('token');
 
           wx.reLaunch({
-            url: '/pages/login/login',
+            url: '/pages/login/index',
           });
         }
       }
