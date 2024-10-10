@@ -26,7 +26,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad() {
+
     const app = getApp();
+    console.log("aaa"+app.globalData.userProfile.studentId)
     this.setData({
       allProjects: app.globalData.allProjects,
       projects: app.globalData.allProjects,

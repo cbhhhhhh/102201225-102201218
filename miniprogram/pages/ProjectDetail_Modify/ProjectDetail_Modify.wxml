@@ -1,0 +1,88 @@
+<!-- pages/ProjectDetail_Modify/ProjectDetail_Modify.wxml -->
+<view class="project-detail">
+
+<!-- 顶部区域 -->
+<image src="{{tempImageUrl || project.imageUrl}}" mode="aspectFill" class="project-image" binderror="onImageError"></image>
+
+<view class="project-header">
+  <view class="project-header-row">
+    <text class="project-title">{{project.name}}</text>
+    <text class="project-type">{{project.category}}</text>
+  </view>
+  <view class="project-time-container">
+    <text class="project-time-label">项目创立时间：</text>
+    <text class="project-time">{{formattedCreatedAt}}</text>
+  </view>
+</view>
+
+<!-- 中部区域 -->
+<view class="project-middle">
+  <!-- 项目关键词 -->
+  <view class="project-keywords">
+    <view class="section-title-container">
+      <text class="section-title">项目关键词</text>
+    </view>
+    <view class="keyword-list">
+      <block wx:for="{{project.tags}}" wx:key="*this">
+        <text class="keyword-item" data-keyword="{{item}}" bindtap="onKeywordTap">{{item}}</text>
+      </block>
+    </view>
+  </view>
+
+  <!-- 报名限制 -->
+  <view class="project-restrictions">
+    <view class="section-title-container">
+      <text class="section-title">报名限制</text>
+    </view>
+    <view class="restriction-item">
+      <text class="restriction-label">需要相关经验：</text>
+      <text class="restriction-text">{{project.experienceRequired || '不限'}}</text>
+    </view>
+    <view class="restriction-item">
+      <text class="restriction-label">专业：</text>
+      <text class="restriction-text">{{project.major || '不限'}}</text>
+    </view>
+  </view>
+
+  <!-- 报名人数 -->
+  <view class="project-signup">
+    <view class="section-title-container">
+      <text class="section-title">报名人数</text>
+    </view>
+    <view class="signup-item">
+      <text class="signup-label">需要人数：</text>
+      <text class="signup-numbers">{{project.talentNumber}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- 底部区域 -->
+<view class="project-description">
+  <view class="section-title-container">
+    <text class="section-title">项目描述</text>
+  </view>
+  <view class="description-text">
+    {{project.description}}
+  </view>
+</view>
+
+<!-- 操作按钮 -->
+<view class="button-group">
+  <button class="delete-button" bindtap="onDelete">删除</button>
+  <button class="modify-button" bindtap="onModify">修改</button>
+</view>
+
+<!-- 删除确认弹窗 -->
+<view wx:if="{{showDeleteConfirm}}" class="modal-overlay">
+  <view class="modal">
+    <view class="modal-header">
+      <text>确认删除项目吗？</text>
+    </view>
+    <view class="modal-footer">
+      <button class="modal-btn" bindtap="confirmDelete">确定</button>
+      <button class="modal-btn cancel" bindtap="cancelDelete">取消</button>
+    </view>
+  </view>
+</view>
+
+</view>

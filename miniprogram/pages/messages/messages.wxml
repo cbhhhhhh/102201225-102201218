@@ -1,0 +1,35 @@
+<!-- pages/messages/messages.wxml -->
+<view class="messages-container">
+  <!-- 顶部标签区域 -->
+  <view class="tabs">
+    <view class="tab {{activeTab === 'messages' ? 'active' : ''}}" bindtap="switchTab" data-tab="messages">我的消息</view>
+    <view class="tab {{activeTab === 'addFriend' ? 'active' : ''}}" bindtap="switchTab" data-tab="addFriend">添加好友</view>
+  </view>
+
+  <!-- 主体区域 -->
+  <view class="content">
+    <!-- 我的消息 -->
+    <view wx:if="{{activeTab === 'messages'}}">
+      <scroll-view class="message-list" scroll-y="true">
+        <block wx:for="{{messages}}" wx:key="{{item._id}}">
+          <view class="message-item" bindtap="openChat" data-chatWith="{{item.chatWithUserId}}">
+            <image class="avatar" src="{{item.avatarUrl}}" binderror="onImageError" />
+            <view class="message-info">
+              <text class="sender-name">{{item.senderName}}</text>
+              <text class="message-preview">{{item.preview}}</text>
+            </view>
+            <text class="message-date">{{item.formattedDate}}</text>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+
+    <!-- 添加好友 -->
+    <view wx:elif="{{activeTab === 'addFriend'}}">
+      <view class="add-friend-container">
+        <input class="friend-input" placeholder="请输入学号" value="{{friendStudentId}}" bindinput="onFriendInput" />
+        <button class="add-friend-button" bindtap="addFriend">添加好友</button>
+      </view>
+    </view>
+  </view>
+</view>

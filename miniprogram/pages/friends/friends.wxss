@@ -1,0 +1,38 @@
+/* pages/friends/friends.wxss */
+.container {
+  padding: 16px;
+}
+
+.friend-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-right: 12px;
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.student-id {
+  font-size: 14px;
+  color: #888;
+}

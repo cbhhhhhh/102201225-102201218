@@ -1,70 +1,120 @@
+/* pages/chat/chat.wxss */
+
+/* 容器样式 */
 .chat-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: #f9f9f9;
 }
 
+/* 顶部导航栏 */
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #ccc;
+}
+
+.chat-header .avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.chat-header .friend-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 聊天消息展示区域 */
 .message-list {
   flex: 1;
-  padding: 10px;
-  overflow: scroll;
+  padding: 20rpx;
+  background-color: #f9f9f9;
 }
 
 .message-item {
   display: flex;
-  margin-bottom: 10px;
   align-items: flex-end;
+  margin-bottom: 20rpx;
 }
 
-.message-left {
-  flex-direction: row;
+.message-item.message-left {
   justify-content: flex-start;
 }
 
-.message-right {
-  flex-direction: row-reverse;
+.message-item.message-right {
   justify-content: flex-end;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
+.message-item .avatar {
+  width: 50rpx;
+  height: 50rpx;
   border-radius: 50%;
-  margin: 0 10px;
+}
+
+.message-item.message-left .avatar {
+  margin-right: 10rpx;
+}
+
+.message-item.message-right .avatar {
+  margin-left: 10rpx;
 }
 
 .message-content {
   max-width: 70%;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #f1f1f1;
+  padding: 15rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  background-color: #fff;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
 }
 
-.message-right .message-content {
-  background-color: #007aff;
-  color: #fff;
+.message-item.message-right .message-content {
+  background-color: #d1ffd1; /* 自己发送的消息背景色 */
 }
 
+.message-item.message-left .message-content {
+  background-color: #ffffff; /* 对方发送的消息背景色 */
+}
+
+/* 输入框和发送按钮 */
 .input-area {
   display: flex;
-  padding: 10px;
-  border-top: 1px solid #eee;
+  align-items: center;
+  padding: 20rpx;
   background-color: #fff;
+  border-top: 1rpx solid #ccc;
 }
 
 .message-input {
   flex: 1;
-  height: 40px;
-  padding: 0 10px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  margin-right: 10px;
+  height: 60rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 30rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  margin-right: 20rpx;
 }
 
 .send-button {
-  width: 80px;
-  height: 40px;
-  background-color: #007aff;
-  color: white;
-  border-radius: 20px;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background-color: #8B0000; /* 深红色 */
+  color: #fff;
+  font-size: 28rpx;
+  text-align: center;
+  line-height: 80rpx;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.send-button:hover {
+  background-color: #700000;
 }

@@ -1,0 +1,127 @@
+/* pages/messages/messages.wxss */
+
+/* 容器样式 */
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+
+/* 顶部标签区域 */
+.tabs {
+  display: flex;
+  border-bottom: 1rpx solid #ccc;
+  background-color: #fff;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.tab.active {
+  color: #8B0000; /* 深红色 */
+  border-bottom: 4rpx solid #8B0000;
+}
+
+/* 主体区域 */
+.content {
+  flex: 1;
+  padding: 20rpx;
+  overflow: hidden;
+}
+
+/* 消息列表样式 */
+.message-list {
+  height: 100%;
+}
+
+.message-item {
+  display: flex;
+  align-items: center;
+  padding: 15rpx;
+  background-color: #fff;
+  border-radius: 10rpx;
+  margin-bottom: 15rpx;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.message-item:hover {
+  background-color: #f0f0f0;
+}
+
+.avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.message-info {
+  flex: 1;
+}
+
+.sender-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.message-preview {
+  font-size: 28rpx;
+  color: #666;
+  margin-top: 5rpx;
+}
+
+.message-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 添加好友区域样式 */
+.add-friend-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.friend-input {
+  width: 80%;
+  height: 60rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.add-friend-button {
+  width: 80%;
+  height: 60rpx;
+  background-color: #8B0000; /* 深红色 */
+  color: #fff;
+  border: none;
+  border-radius: 10rpx;
+  font-size: 30rpx;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-friend-button:hover {
+  background-color: #700000;
+}
+
+/* 通用样式 */
+.scroll-view {
+  /* 根据需要添加样式 */
+}

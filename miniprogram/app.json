@@ -9,7 +9,9 @@
     "pages/myProject/myProject",
     "pages/first/first",
     "pages/chat/chat",
-
+    "pages/messages/messages",
+    "pages/ProjectDetail_Modify/ProjectDetail_Modify",
+    "pages/friends/friends",
 
     "pages/user-center/index"
   
@@ -38,13 +40,13 @@
       },
       {
         "pagePath": "pages/first/first",
-        "text": "快速开始",
+        "text": "项目",
         "iconPath": "images/icons/home.png",
         "selectedIconPath": "images/icons/home-active.png"
       },
       {
-        "pagePath": "pages/chat/chat",
-        "text": "聊天",
+        "pagePath": "pages/friends/friends",
+        "text": "消息",
         "iconPath": "images/icons/business.png",
         "selectedIconPath": "images/icons/business-active.png"
       },

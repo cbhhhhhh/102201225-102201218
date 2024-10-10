@@ -71,11 +71,14 @@ Page({
 
           // 存储用户信息
           wx.setStorageSync('userInfo', res.result.user);
-
+          const userInfo = wx.getStorageSync('userInfo');
+          getApp().globalData.userProfile.studentId=userInfo.student_id;
           // 跳转到主界面或其他页面
           wx.reLaunch({
             url: '/pages/home/home' // 替换为您的主界面路径
           });
+          
+          
         } else {
           wx.showToast({
             title: res.result.message || '登录失败',

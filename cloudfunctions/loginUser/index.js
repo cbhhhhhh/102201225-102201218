@@ -50,6 +50,9 @@ exports.main = async (event, context) => {
       });
     }
 
+    const app = getApp();
+    app.globalData.userProfile.student_id = student_id;
+    console.log(app.globalData.userProfile.student_id)
     return {
       success: true,
       message: '登录成功',

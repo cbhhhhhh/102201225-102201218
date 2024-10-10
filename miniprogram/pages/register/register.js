@@ -109,6 +109,7 @@ Page({
           wx.navigateTo({
             url: '/pages/login/index' // 替换为您的登录页面路径
           });
+          
         } else {
           wx.showToast({
             title: res.result.message || '注册失败',

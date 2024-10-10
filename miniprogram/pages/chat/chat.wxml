@@ -1,10 +1,17 @@
+<!-- pages/chat/chat.wxml -->
 <view class="chat-container">
+  <!-- 顶部导航栏 -->
+  <view class="chat-header">
+    <image class="avatar" src="{{friendAvatarUrl}}" binderror="onImageError" />
+    <text class="friend-name">{{friendName}}</text>
+  </view>
+
   <!-- 聊天消息展示区域 -->
-  <scroll-view class="message-list" scroll-y="true" scroll-with-animation="true" scroll-top="{{scrollTop}}">
+  <scroll-view class="message-list" scroll-y="true" scroll-with-animation="true" scroll-top="{{scrollTop}}" scroll-into-view="{{scrollIntoView}}">
     <block wx:for="{{messages}}" wx:key="{{item._id}}">
       <view class="message-item {{item.from === userId ? 'message-right' : 'message-left'}}">
         <!-- 头像 -->
-        <image class="avatar" src="{{item.from === userId ? myAvatarUrl : otherAvatarUrl}}" />
+        <image class="avatar" src="{{item.from === userId ? myAvatarUrl : friendAvatarUrl}}" binderror="onImageError" />
         <!-- 消息气泡 -->
         <view class="message-content">{{item.content}}</view>
       </view>

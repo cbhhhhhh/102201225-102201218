@@ -4,9 +4,12 @@
     <text class="title">我的项目</text>
   </view>
   <view class="project-list">
-    <block wx:for="{{myProjects}}" wx:key="id">
-      <view class="project-item">
-        <image class="project-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+    <block wx:for="{{myProjects}}" wx:key="_id">
+      <view class="project-item" bindtap="onProjectTap" data-project-id="{{item._id}}">
+        <!-- 项目展示图片 -->
+        <image class="project-image" src="{{item.tempImageUrl || item.imageUrl}}" mode="aspectFill" binderror="onImageError" data-project-id="{{item._id}}"></image>
+        
+        <!-- 项目基本信息 -->
         <view class="project-info">
           <text class="project-name">{{item.name}}</text>
           

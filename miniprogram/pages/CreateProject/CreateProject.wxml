@@ -1,7 +1,7 @@
-<!-- pages/publishProject/publishProject.wxml -->
+<!-- pages/CreateProject/CreateProject.wxml -->
 <view class="container">
   <!-- 标题 -->
-  <view class="title">项目发起</view>
+  <view class="title">{{mode === 'edit' ? '修改项目' : '项目发起'}}</view>
 
   <!-- 表单内容 -->
   <view class="form">
@@ -26,6 +26,8 @@
         <!-- 显示已有关键词 -->
         <view class="keyword-tag" wx:for="{{keywords}}" wx:key="index">
           <text>{{item}}</text>
+          <!-- 删除按钮 -->
+          <text class="delete-keyword-btn" data-index="{{index}}" bindtap="removeKeyword">×</text>
         </view>
         <!-- 如果关键词数量小于最大值，显示添加按钮 -->
         <button wx:if="{{keywords.length < maxKeywords}}" class="add-keyword-btn" bindtap="showAddKeyword">＋</button>
@@ -49,7 +51,7 @@
       <text class="label">项目展示</text>
       <view class="image-upload-container" bindtap="onChooseImage">
         <!-- 如果有预览图片，显示上传的图片；否则显示加号 -->
-        <image wx:if="{{previewImageUrl}}" src="{{previewImageUrl}}" class="upload-image" mode="aspectFill"></image>
+        <image wx:if="{{previewImageUrl}}" src="{{previewImageUrl}}" class="upload-image" mode="aspectFill" binderror="onImageError"></image>
         <view wx:elif="{{!previewImageUrl}}" class="upload-placeholder">
           <text class="plus-icon">+</text>
         </view>
@@ -62,7 +64,6 @@
     <view class="modal">
       <view class="modal-header">
         <text>添加关键词</text>
-        <!-- 移除删除按钮 -->
       </view>
       <view class="modal-body">
         <input class="modal-input" placeholder="请输入关键词" value="{{newKeyword}}" bindinput="onNewKeywordInput" />
@@ -77,6 +78,6 @@
   <!-- 操作按钮 -->
   <view class="button-group">
     <button class="cancel-button" bindtap="onCancel">取消</button>
-    <button class="submit-button" bindtap="onSubmit">创建</button>
+    <button class="submit-button" bindtap="onSubmit">{{mode === 'edit' ? '保存修改' : '创建'}}</button>
   </view>
 </view>
