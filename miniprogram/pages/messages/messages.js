@@ -47,6 +47,10 @@ Page({
     const app = getApp();
     const userId = app.globalData.userProfile.openid;
 
+    // 获取所有好友的列表
+    const friends = app.globalData.friendDetails || [];
+
+    // 获取所有与当前用户相关的会话
     db.collection('conversations')
       .where({
         participants: _.all([userId]),
@@ -55,19 +59,40 @@ Page({
       .orderBy('lastMessageTimestamp', 'desc')
       .get()
       .then(res => {
-        const conversations = res.data.map(conv => {
+        const conversations = res.data;
+
+        // 创建一个映射，方便查找会话
+        const conversationMap = {};
+        conversations.forEach(conv => {
           const otherUserId = conv.participants.find(id => id !== userId);
-          const friend = app.globalData.friendDetails.find(f => f.openid === otherUserId) || {};
-          return {
-            ...conv,
-            formattedDate: this.formatDate(conv.lastMessageTimestamp),
-            preview: conv.lastMessage ? conv.lastMessage.content : '暂无消息',
-            senderName: conv.lastMessage && conv.lastMessage.from === userId ? '我' : (friend.name || '好友'),
-            avatarUrl: friend.avatarUrl || '/images/placeholder.png'
-          };
+          conversationMap[otherUserId] = conv;
         });
+
+        // 构建消息列表，包括所有好友
+        const messages = friends.map(friend => {
+          const conv = conversationMap[friend.openid];
+          if (conv) {
+            return {
+              chatWithUserId: friend.openid,
+              senderStudentId: friend.studentId || '未知学号',
+              formattedDate: this.formatDate(conv.lastMessageTimestamp),
+              preview: conv.lastMessage ? conv.lastMessage.content : '暂无消息',
+              avatarUrl: friend.avatarUrl || '/images/placeholder.png'
+            };
+          } else {
+            // 没有会话时，只显示好友信息，不显示预览和日期
+            return {
+              chatWithUserId: friend.openid,
+              senderStudentId: friend.studentId || '未知学号',
+              formattedDate: '', // 无日期
+              preview: '', // 无预览
+              avatarUrl: friend.avatarUrl || '/images/placeholder.png'
+            };
+          }
+        });
+
         this.setData({
-          messages: conversations
+          messages: messages
         });
       })
       .catch(err => {
@@ -109,11 +134,12 @@ Page({
   },
 
   /**
-   * 点击消息项，跳转到聊天页面
+   * 点击消息项，跳转到通用聊天页面
    */
   openChat: function (e) {
     const chatWithUserId = e.currentTarget.dataset.chatWith;
-    const friend = getApp().globalData.friendDetails.find(friend => friend.openid === chatWithUserId);
+    const app = getApp();
+    const friend = app.globalData.friendDetails.find(friend => friend.openid === chatWithUserId);
 
     if (!friend) {
       wx.showToast({
@@ -125,7 +151,7 @@ Page({
     }
 
     wx.navigateTo({
-      url: `/pages/chat/chat?chatWithUserId=${chatWithUserId}&friendName=${encodeURIComponent(friend.name)}&friendAvatarUrl=${encodeURIComponent(friend.avatarUrl)}`,
+      url: `/pages/chat/chat?chatWithUserId=${chatWithUserId}&studentId=${encodeURIComponent(friend.studentId)}`,
     });
   },
 

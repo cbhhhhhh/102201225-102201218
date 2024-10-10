@@ -3,24 +3,33 @@
   <!-- 顶部导航栏 -->
   <view class="chat-header">
     <image class="avatar" src="{{friendAvatarUrl}}" binderror="onImageError" />
-    <text class="friend-name">{{friendName}}</text>
+    <text class="friend-name">{{studentId}}</text>
   </view>
 
   <!-- 聊天消息展示区域 -->
-  <scroll-view class="message-list" scroll-y="true" scroll-with-animation="true" scroll-top="{{scrollTop}}" scroll-into-view="{{scrollIntoView}}">
-    <block wx:for="{{messages}}" wx:key="{{item._id}}">
-      <view class="message-item {{item.from === userId ? 'message-right' : 'message-left'}}">
+  <scroll-view class="message-list" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{scrollToView}}" id="messageList">
+    <block wx:for="{{messages}}" wx:for-index="index" wx:key="_id">
+      <view class="message-item {{item.from === userId ? 'message-right' : 'message-left'}}" id="msg-{{index}}">
         <!-- 头像 -->
-        <image class="avatar" src="{{item.from === userId ? myAvatarUrl : friendAvatarUrl}}" binderror="onImageError" />
+        <image 
+          class="avatar {{item.from === userId ? 'my-avatar' : 'friend-avatar'}}" 
+          src="{{item.from === userId ? myAvatarUrl : friendAvatarUrl}}" 
+          binderror="onImageError" 
+        />
         <!-- 消息气泡 -->
-        <view class="message-content">{{item.content}}</view>
+        <view class="message-content">
+          <text class="message-text">{{item.content}}</text>
+          <text class="message-time">{{formatDate(item.timestamp)}}</text>
+          <!-- 如果是示例消息，添加加号按钮 -->
+          <view wx:if="{{item.isSample}}" class="add-button"></view>
+        </view>
       </view>
     </block>
   </scroll-view>
 
   <!-- 输入框和发送按钮 -->
   <view class="input-area">
-    <input class="message-input" value="{{inputMessage}}" bindinput="onInputMessage" placeholder="请输入消息..." />
+    <input class="message-input" value="{{newMessage}}" bindinput="onMessageInput" placeholder="请输入消息..." />
     <button class="send-button" bindtap="sendMessage">发送</button>
   </view>
 </view>

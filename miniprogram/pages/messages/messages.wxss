@@ -36,54 +36,94 @@
   flex: 1;
   padding: 20rpx;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 分节标题 */
+.section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15rpx;
 }
 
 /* 消息列表样式 */
 .message-list {
-  height: 100%;
+  flex: 1;
+  overflow-y: scroll;
 }
 
+/* 修改后的消息项样式 */
 .message-item {
+  position: relative; /* 为绝对定位的时间提供参考 */
   display: flex;
-  align-items: center;
-  padding: 15rpx;
+  align-items: flex-start; /* 使头像和消息内容顶部对齐 */
+  padding: 20rpx; /* 增加内边距以加大宽度 */
   background-color: #fff;
   border-radius: 10rpx;
-  margin-bottom: 15rpx;
+  margin-bottom: 20rpx; /* 增加下边距 */
   box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: background-color 0.3s;
+  /* 确保消息项宽度适应容器 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .message-item:hover {
   background-color: #f0f0f0;
 }
 
+/* 头像样式 */
 .avatar {
-  width: 60rpx;
-  height: 60rpx;
+  width: 100rpx; /* 增大头像尺寸 */
+  height: 100rpx;
   border-radius: 50%;
   margin-right: 20rpx;
+  object-fit: cover; /* 确保头像覆盖整个区域 */
+  background-color: #e0e0e0; /* 设置头像背景色，防止图片未加载时显示空白 */
 }
 
+/* 消息信息区域 */
 .message-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* 确保内容换行 */
+  white-space: normal;
+  word-wrap: break-word;
 }
 
-.sender-name {
-  font-size: 30rpx;
+/* 发件人学号样式 */
+.sender-student-id {
+  font-size: 34rpx;
   font-weight: bold;
   color: #333;
+  margin-bottom: 5rpx;
 }
 
+/* 消息预览样式 */
 .message-preview {
   font-size: 28rpx;
   color: #666;
-  margin-top: 5rpx;
+  /* 允许文本换行 */
+  white-space: normal;
+  word-wrap: break-word;
+  /* 增加行高以提高可读性 */
+  line-height: 1.5;
 }
 
+/* 消息日期样式 */
 .message-date {
-  font-size: 24rpx;
+  position: absolute; /* 绝对定位 */
+  bottom: 20rpx; /* 距离底部 */
+  right: 20rpx; /* 距离右侧 */
+  font-size: 28rpx;
   color: #999;
 }
 
@@ -122,6 +162,4 @@
 }
 
 /* 通用样式 */
-.scroll-view {
-  /* 根据需要添加样式 */
-}
+/* 可根据需要添加更多样式 */

@@ -6,6 +6,7 @@
   flex-direction: column;
   height: 100vh;
   background-color: #f9f9f9;
+  overflow: hidden; /* 防止溢出 */
 }
 
 /* 顶部导航栏 */
@@ -18,14 +19,14 @@
 }
 
 .chat-header .avatar {
-  width: 60rpx;
-  height: 60rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
   margin-right: 20rpx;
 }
 
 .chat-header .friend-name {
-  font-size: 34rpx;
+  font-size: 40rpx;
   font-weight: bold;
   color: #333;
 }
@@ -33,54 +34,114 @@
 /* 聊天消息展示区域 */
 .message-list {
   flex: 1;
-  padding: 20rpx;
+  padding: 20rpx; /* 根据需要调整内边距 */
   background-color: #f9f9f9;
+  overflow-y: scroll;
 }
 
+/* 消息项样式 */
 .message-item {
   display: flex;
   align-items: flex-end;
   margin-bottom: 20rpx;
 }
 
+/* 消息来自他人 */
 .message-item.message-left {
   justify-content: flex-start;
 }
 
+/* 消息来自自己 */
 .message-item.message-right {
   justify-content: flex-end;
 }
 
+/* 头像 */
 .message-item .avatar {
-  width: 50rpx;
-  height: 50rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
 }
 
+/* 左侧消息 */
 .message-item.message-left .avatar {
   margin-right: 10rpx;
 }
 
-.message-item.message-right .avatar {
-  margin-left: 10rpx;
+.message-item.message-left .message-content {
+  background-color: #ffffff; /* 对方发送的消息背景色 */
 }
 
-.message-content {
-  max-width: 70%;
-  padding: 15rpx;
-  border-radius: 20rpx;
-  font-size: 28rpx;
-  line-height: 40rpx;
-  background-color: #fff;
-  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+/* 右侧消息 */
+.message-item.message-right .avatar {
+  margin-left: 20rpx;
 }
 
 .message-item.message-right .message-content {
   background-color: #d1ffd1; /* 自己发送的消息背景色 */
+  margin-right: 40rpx; /* 添加右侧间距 */
 }
 
-.message-item.message-left .message-content {
-  background-color: #ffffff; /* 对方发送的消息背景色 */
+/* 消息气泡内容 */
+.message-content {
+  max-width: 70%;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+  position: relative;
+  word-wrap: break-word; /* 允许内容换行 */
+}
+
+/* 消息文本 */
+.message-text {
+  display: block;
+  margin-bottom: 5rpx;
+}
+
+/* 消息时间 */
+.message-time {
+  font-size: 20rpx;
+  color: #999;
+  text-align: right;
+  display: block;
+}
+
+/* 发送方示例消息的加号 */
+/* 消息气泡内容 */
+.message-content {
+  max-width: 70%;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+  position: relative;
+  word-wrap: break-word; /* 允许内容换行 */
+  display: flex; /* 使用 flex 布局 */
+  flex-wrap: nowrap; /* 防止换行 */
+  align-items: center; /* 垂直居中对齐 */
+}
+
+/* 发送方示例消息的加号 */
+.message-content .add-button {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: inline-flex; /* 使用内联 flex 布局 */
+  align-items: center;
+  justify-content: center;
+  margin-left: 30rpx; /* 左侧间距 */
+  cursor: pointer;
+}
+
+.message-content .add-button::after {
+  content: "+";
+  color: white;
+  font-size: 40rpx;
+  margin-top: -4rpx; /* 负值，向上移动 */
 }
 
 /* 输入框和发送按钮 */
@@ -93,28 +154,44 @@
 }
 
 .message-input {
-  flex: 1;
+  /* flex: 1; 让输入框占据剩余空间 */
+  width: 1000px;
   height: 60rpx;
-  border: 1rpx solid #ccc;
+  /* 移除固定宽度 */
+  border: 2rpx solid #ccc;
   border-radius: 30rpx;
   padding: 0 20rpx;
   font-size: 28rpx;
-  margin-right: 20rpx;
+  margin-right: 20rpx; /* 保持与发送按钮的间距 */
 }
 
 .send-button {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 40rpx;
+  width: 0rpx; /* 设置发送按钮的固定宽度 */
+  height: 60rpx; /* 设置发送按钮的固定高度，与输入框一致 */
+  border-radius: 30rpx; /* 使按钮圆形 */
   background-color: #8B0000; /* 深红色 */
   color: #fff;
   font-size: 28rpx;
   text-align: center;
-  line-height: 80rpx;
+  line-height: 60rpx; /* 与高度一致，使文本垂直居中 */
   cursor: pointer;
   transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 确保内容居中 */
 }
 
 .send-button:hover {
   background-color: #700000;
 }
+
+/* 日期显示区域 */
+.date-display {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  padding: 10rpx 0;
+}
+
+/* 通用样式 */
+/* 可根据需要添加更多样式 */

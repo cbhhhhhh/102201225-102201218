@@ -10,18 +10,22 @@
   <view class="content">
     <!-- 我的消息 -->
     <view wx:if="{{activeTab === 'messages'}}">
-      <scroll-view class="message-list" scroll-y="true">
-        <block wx:for="{{messages}}" wx:key="{{item._id}}">
-          <view class="message-item" bindtap="openChat" data-chatWith="{{item.chatWithUserId}}">
-            <image class="avatar" src="{{item.avatarUrl}}" binderror="onImageError" />
-            <view class="message-info">
-              <text class="sender-name">{{item.senderName}}</text>
-              <text class="message-preview">{{item.preview}}</text>
+      <!-- 消息列表视图 -->
+      <view class="section">
+        <text class="section-title">消息列表</text>
+        <scroll-view class="message-list" scroll-y="true" scroll-id="messageList">
+          <block wx:for="{{messages}}" wx:key="chatWithUserId">
+            <view class="message-item" bindtap="openChat" data-chat-with="{{item.chatWithUserId}}" data-index="{{index}}">
+              <image class="avatar" src="{{item.avatarUrl || '/images/placeholder.png'}}" binderror="onImageError" data-index="{{index}}" />
+              <view class="message-info">
+                <text class="sender-student-id">{{item.senderStudentId}}</text>
+                <text class="message-preview" wx:if="{{item.preview}}">{{item.preview}}</text>
+              </view>
+              <text class="message-date" wx:if="{{item.formattedDate}}">{{item.formattedDate}}</text>
             </view>
-            <text class="message-date">{{item.formattedDate}}</text>
-          </view>
-        </block>
-      </scroll-view>
+          </block>
+        </scroll-view>
+      </view>
     </view>
 
     <!-- 添加好友 -->

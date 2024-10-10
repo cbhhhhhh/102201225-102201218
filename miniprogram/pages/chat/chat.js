@@ -5,80 +5,72 @@ Page({
    * 页面的初始数据
    */
   data: {
-    inputMessage: '', // 用户输入的消息
-    messages: [], // 聊天消息列表
-    myAvatarUrl: '/images/my-avatar.png', // 自己的头像
-    friendAvatarUrl: '/images/other-avatar.png', // 对方的头像
-    friendName: '', // 对方的姓名
-    userId: '', // 自己的用户 ID
-    chatWithUserId: '', // 正在聊天的用户 ID
-    scrollTop: 0, // 滚动位置
-    scrollIntoView: '', // 滚动到最后一条消息
+    chatWithUserId: '',
+    studentId: '',
+    messages: [], // 聊天记录
+    newMessage: '', // 新消息内容
+    userId: '', // 当前用户ID
+    friendAvatarUrl: '/images/placeholder.png', // 默认头像
+    myAvatarUrl: '/images/placeholder.png', // 默认头像
+    scrollTop: 0, // 用于控制滚动
+    currentDate: '', // 当前日期显示
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    const { chatWithUserId, studentId } = options;
     const app = getApp();
+    const userId = app.globalData.userProfile.openid;
+
     this.setData({
-      userId: app.globalData.userProfile.openid, // 自己的用户 ID
-      chatWithUserId: options.chatWithUserId, // 正在聊天的用户 ID
-      friendName: decodeURIComponent(options.friendName) || '好友', // 对方姓名，解码以防特殊字符
-      friendAvatarUrl: decodeURIComponent(options.friendAvatarUrl) || '/images/other-avatar.png' // 对方头像，解码
+      chatWithUserId: chatWithUserId || '',
+      studentId: studentId || '',
+      userId: userId || '',
+      currentDate: this.getCurrentDate(),
     });
 
-    // 初始化消息
-    this.initMessages();
-
-    // 开始监听新消息
-    this.watchMessages();
-  },
-
-  /**  
-   * 初始化消息，加载历史聊天记录
-   */
-  initMessages: function () {
-    const db = wx.cloud.database();
-    const _ = db.command;
-
-    db.collection('conversations')
-      .where({
-        participants: _.all([this.data.userId, this.data.chatWithUserId]) // 使用 $all 操作符
-      })
-      .get()
-      .then(convRes => {
-        if (convRes.data.length === 0) {
-          console.warn('未找到对应的会话');
-          // **不创建新的会话，等待发送消息时创建**
-          this.setData({
-            messages: []
-          });
-        } else {
-          // 存在会话，加载消息
-          this.loadMessages();
-        }
-      })
-      .catch(err => {
-        console.error('查找会话失败：', err);
-        wx.showToast({
-          title: '加载消息失败',
-          icon: 'none',
-          duration: 2000
-        });
+    // 获取好友的头像
+    const friend = (app.globalData.friendDetails || []).find(f => f.openid === chatWithUserId);
+    if (friend) {
+      this.setData({
+        friendAvatarUrl: friend.avatarUrl || '/images/placeholder.png',
       });
+    }
+
+    // 获取自己的头像
+    const currentUser = app.globalData.userProfile;
+    if (currentUser && currentUser.avatarUrl) {
+      this.setData({
+        myAvatarUrl: currentUser.avatarUrl,
+      });
+    }
+
+    // 加载聊天记录
+    this.loadChatHistory();
   },
 
   /**
-   * 加载消息列表（会话中的消息）
+   * 获取当前日期，格式为 YYYY-MM-DD
    */
-  loadMessages: function () {
+  getCurrentDate: function () {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2);
+    const day = (`0${date.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
+  },
+
+  /**
+   * 加载聊天记录
+   */
+  loadChatHistory: function () {
     const db = wx.cloud.database();
     const _ = db.command;
-    const userId = this.data.userId;
-    const chatWithUserId = this.data.chatWithUserId;
+    const { userId, chatWithUserId } = this.data;
 
-    // 查询会话中的所有消息
+    // 查询当前用户和聊天对象之间的所有消息
     db.collection('messages')
       .where({
         or: [
@@ -95,20 +87,32 @@ Page({
       .orderBy('timestamp', 'asc')
       .get()
       .then(res => {
-        const messages = res.data.map((msg, index) => ({
-          ...msg,
-          id: `msg_${index}`
+        const formattedMessages = res.data.map(msg => ({
+          _id: msg._id,
+          from: msg.from,
+          to: msg.to,
+          content: msg.content,
+          timestamp: msg.timestamp, // 确保 timestamp 是 Date 对象
+          isSample: msg.isSample || false, // 保留示例消息标记
         }));
+
+        // 添加示例消息（如果还未添加）
+        const hasSampleMessage = formattedMessages.some(msg => msg.isSample);
+        if (!hasSampleMessage) {
+          formattedMessages.unshift(this.createSampleMessage());
+        }
+
         this.setData({
-          messages: messages,
-          scrollTop: messages.length * 1000, // 根据消息数量调整
-          scrollIntoView: `msg_${messages.length - 1}` // 用于滚动到最后一条消息
+          messages: formattedMessages
         });
+
+        // 滚动到最底部
+        this.scrollToBottom();
       })
       .catch(err => {
-        console.error('加载聊天消息失败：', err);
+        console.error('加载聊天记录失败：', err);
         wx.showToast({
-          title: '加载消息失败',
+          title: '加载聊天记录失败',
           icon: 'none',
           duration: 2000
         });
@@ -116,76 +120,41 @@ Page({
   },
 
   /**
-   * 监听新消息
+   * 创建示例消息对象
    */
-  watchMessages: function () {
-    const db = wx.cloud.database();
-    const _ = db.command;
-    const userId = this.data.userId;
-    const chatWithUserId = this.data.chatWithUserId;
-
-    this.messageWatcher = db.collection('messages')
-      .where({
-        or: [
-          {
-            from: userId,
-            to: chatWithUserId
-          },
-          {
-            from: chatWithUserId,
-            to: userId
-          }
-        ]
-      })
-      .orderBy('timestamp', 'asc')
-      .watch({
-        onChange: snapshot => {
-          if (snapshot.type === 'init') {
-            // 初始加载已在 loadMessages 中处理
-            return;
-          }
-
-          if (snapshot.docChanges) {
-            const newMessages = snapshot.docChanges.map(change => {
-              if (change.type === 'add') {
-                return {
-                  ...change.doc,
-                  id: `msg_${this.data.messages.length}`
-                };
-              }
-              return null;
-            }).filter(msg => msg !== null);
-
-            if (newMessages.length > 0) {
-              this.setData({
-                messages: this.data.messages.concat(newMessages),
-                scrollTop: this.data.messages.length * 1000 + newMessages.length * 1000,
-                scrollIntoView: `msg_${this.data.messages.length + newMessages.length - 1}`
-              });
-            }
-          }
-        },
-        onError: err => {
-          console.error('监听聊天消息错误：', err);
-        }
-      });
+  createSampleMessage: function () {
+    return {
+      _id: 'sample-message-id', // 确保唯一
+      from: this.data.chatWithUserId || 'system', // 标记为系统消息或特定用户
+      to: this.data.userId,
+      content: '对方向你发送一条加入申请',
+      timestamp: new Date(),
+      isSample: true, // 标记为示例消息
+    };
   },
 
   /**
-   * 页面卸载时清理监听器
+   * 格式化日期
    */
-  onUnload: function () {
-    if (this.messageWatcher) {
-      this.messageWatcher.close();
+  formatDate: function (timestamp) {
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) {
+      return '';
     }
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2);
+    const day = (`0${date.getDate()}`).slice(-2);
+    const hours = (`0${date.getHours()}`).slice(-2);
+    const minutes = (`0${date.getMinutes()}`).slice(-2);
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   },
 
   /**
-   * 处理输入框变化
+   * 处理新消息输入框变化
    */
-  onInputMessage: function (e) {
+  onMessageInput: function (e) {
     this.setData({
-      inputMessage: e.detail.value
+      newMessage: e.detail.value
     });
   },
 
@@ -193,77 +162,91 @@ Page({
    * 发送消息
    */
   sendMessage: function () {
-    const messageContent = this.data.inputMessage.trim();
-    if (messageContent === '') return;
-
     const db = wx.cloud.database();
-    const _ = db.command;
-    const timestamp = new Date().getTime();
+    const app = getApp();
+    const { userId, chatWithUserId, newMessage, messages } = this.data;
+
+    if (!newMessage.trim()) {
+      wx.showToast({
+        title: '请输入消息内容',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
 
     const messageData = {
-      from: this.data.userId,
-      to: this.data.chatWithUserId,
-      content: messageContent,
-      timestamp: timestamp,
+      from: userId,
+      to: chatWithUserId || 'system', // 如果没有指定聊天对象，则发送给系统
+      content: newMessage.trim(),
+      timestamp: db.serverDate(),
+      isSample: false,
     };
 
-    // 将消息添加到数据库
-    db.collection('messages')
-      .add({
-        data: messageData
-      })
-      .then(res => {
-        // 清空输入框
-        this.setData({
-          inputMessage: ''
-        });
+    // 添加消息到 'messages' 集合
+    db.collection('messages').add({
+      data: messageData
+    }).then(res => {
+      // 获取服务器返回的 _id 和 timestamp
+      const addedMessage = {
+        _id: res._id, // 新增的消息ID
+        from: userId,
+        to: chatWithUserId || 'system',
+        content: newMessage.trim(),
+        timestamp: new Date(), // 由于 db.serverDate() 是服务器时间，客户端暂时使用本地时间
+        isSample: false,
+      };
 
-        // 更新会话的最后一条消息和时间戳
-        db.collection('conversations').where({
-          participants: _.all([this.data.userId, this.data.chatWithUserId])
-        }).get().then(convRes => {
-          if (convRes.data.length > 0) {
-            const conversation = convRes.data[0];
-            db.collection('conversations').doc(conversation._id).update({
-              data: {
-                lastMessage: messageData,
-                lastMessageTimestamp: db.serverDate()
-              }
-            });
-          } else {
-            // 如果会话不存在，则创建一个新的会话
-            db.collection('conversations').add({
-              data: {
-                participants: [this.data.userId, this.data.chatWithUserId],
-                lastMessage: messageData,
-                lastMessageTimestamp: db.serverDate(),
-                createdAt: db.serverDate()
-              }
-            });
-          }
-        });
-      })
-      .catch(err => {
-        console.error('发送消息失败：', err);
-        wx.showToast({
-          title: '发送失败',
-          icon: 'none',
-          duration: 2000
-        });
+      // 直接将新消息添加到 messages 数组中
+      this.setData({
+        messages: [...messages, addedMessage],
+        newMessage: '',
       });
+
+      // 滚动到底部
+      this.scrollToBottom();
+
+      wx.showToast({
+        title: '消息发送成功',
+        icon: 'success',
+        duration: 2000
+      });
+    }).catch(err => {
+      console.error('发送消息失败：', err);
+      wx.showToast({
+        title: '发送消息失败',
+        icon: 'none',
+        duration: 2000
+      });
+    });
   },
 
   /**
-   * 处理图片加载错误，显示占位图
+   * 滚动到消息列表底部
    */
-  onImageError: function (e) {
-    if (e.currentTarget.dataset.role === 'friend') {
-      this.setData({
-        friendAvatarUrl: '/images/placeholder.png'
-      });
-    } else {
-      // 其他头像错误处理
-    }
+  scrollToBottom: function () {
+    // 使用 scroll-into-view 属性定位到最后一条消息
+    this.setData({
+      scrollToView: 'msg-' + (this.data.messages.length - 1)
+    });
   },
+
+  /**
+   * 处理图片加载错误，显示默认头像
+   */
+  // onImageError: function (e) {
+  //   const className = e.currentTarget.className;
+  //   if (className.includes('avatar')) {
+  //     if (className.includes('friend-avatar')) {
+  //       this.setData({
+  //         friendAvatarUrl: '/images/placeholder.png'
+  //       });
+  //     } else if (className.includes('my-avatar')) {
+  //       this.setData({
+  //         myAvatarUrl: '/images/placeholder.png'
+  //       });
+  //     }
+  //   }
+  // }
 
 });

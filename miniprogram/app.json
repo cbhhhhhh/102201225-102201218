@@ -11,7 +11,7 @@
     "pages/chat/chat",
     "pages/messages/messages",
     "pages/ProjectDetail_Modify/ProjectDetail_Modify",
-    "pages/friends/friends",
+
 
     "pages/user-center/index"
   
@@ -45,7 +45,7 @@
         "selectedIconPath": "images/icons/home-active.png"
       },
       {
-        "pagePath": "pages/friends/friends",
+        "pagePath": "pages/messages/messages",
         "text": "消息",
         "iconPath": "images/icons/business.png",
         "selectedIconPath": "images/icons/business-active.png"
