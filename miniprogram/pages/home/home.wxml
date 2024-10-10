@@ -13,7 +13,6 @@
     <button class="home-button" bindtap="onCreateProject">发布项目</button>
     <button class="home-button" bindtap="onJoinProject">加入项目</button>
     <button class="home-button" bindtap="onMyProjects">我的项目</button>
-    <button class="home-button" bindtap="onSettings">设置</button>
   </view>
 </view>
 </view>

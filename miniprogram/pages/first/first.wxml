@@ -73,7 +73,7 @@
         </view>
       </view>
 
-      <!-- 专业 -->
+      <!-- 专业
       <view class="filter-section">
         <text class="filter-title">专业</text>
         <input
@@ -83,7 +83,7 @@
           value="{{filterOptions.major}}"
           bindinput="onFilterChange"
         />
-      </view>
+      </view> -->
 
       <!-- 关键词 -->
       <view class="filter-section">
@@ -97,7 +97,7 @@
         />
       </view>
 
-      <!-- 是否需要相关经验 -->
+      <!-- 是否需要相关经验
       <view class="filter-section">
         <text class="filter-title">是否需要相关经验</text>
         <view class="filter-options">
@@ -112,7 +112,7 @@
             </view>
           </block>
         </view>
-      </view>
+      </view> -->
 
       <!-- 底部按钮 -->
       <view class="filter-buttons">
